@@ -26,12 +26,7 @@ namespace Actiance
                 defaults: new { id = RouteParameter.Optional }
             );
 
-            WatchGraph();
         }
 
-        public static void WatchGraph()
-        {
-            // TODO - Register to listen to MSFT graph changes
-        }
     }
 }

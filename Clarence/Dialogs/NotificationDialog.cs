@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
 using Actiance.Models;
+using System.Configuration;
 
 namespace Actiance.Dialogs
 {
@@ -21,12 +22,12 @@ namespace Actiance.Dialogs
             var activity = await result as Activity;
             var notification = activity.Value as Notification;
 
-            var connector = new ConnectorClient(new Uri(Config.ServiceUrl));
+            var connector = new ConnectorClient(new Uri(ConfigurationManager.AppSettings["ServiceUrl"]));
             
             IMessageActivity message = Activity.CreateMessageActivity();
-            message.From = Config.Bot;
+            message.From = new ChannelAccount(ConfigurationManager.AppSettings["BotId"], "Clarence");
             message.Conversation = new ConversationAccount(true, "conversation");
-            message.ChannelId = Config.ChannelId;
+            message.ChannelId = ConfigurationManager.AppSettings["ChannelId"];
 
             message.Locale = "en-En";
             message.Text = $"You made a change to the file {notification.Resource}";
