@@ -1,14 +1,28 @@
-﻿<Properties StartupConfiguration="{8B66EB27-DE10-4631-A7F4-F08043FDE32B}|Default">
+﻿<Properties StartupConfiguration="{$GUID1$}|" NuGet.AddPackagesDialog.IncludePrerelease="True">
   <MonoDevelop.Ide.ItemProperties.Clarence PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Clarence/Startup.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Controllers/MessagesController.cs">
     <Files>
-      <File FileName="Clarence/app.config" Line="1" Column="1" />
-      <File FileName="Clarence/appsettings.json" Line="1" Column="1" />
-      <File FileName="Clarence/appsettings.Development.json" Line="1" Column="1" />
-      <File FileName="Clarence/Program.cs" Line="1" Column="1" />
-      <File FileName="Clarence/Startup.cs" Line="1" Column="1" />
-      <File FileName="Clarence/Clarence.csproj" Line="1" Column="1" />
+      <File FileName="Dialogs/RootDialog.cs" Line="4" Column="21" />
+      <File FileName="Global.asax.cs" Line="13" Column="10" />
+      <File FileName="App_Start/WebApiConfig.cs" Line="6" Column="7" />
+      <File FileName="Controllers/MessagesController.cs" Line="19" Column="56" />
+      <File FileName="Properties/AssemblyInfo.cs" Line="29" Column="21" />
+      <File FileName="Global.asax" Line="2" Column="1" />
+      <File FileName="index.htm" Line="13" Column="1" />
+      <File FileName="Web.config" Line="68" Column="17" />
+      <File FileName="packages.config" Line="1" Column="1" />
     </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="Clarence" expanded="True">
+            <Node name="Clarence" expanded="True" selected="True">
+              <Node name="Controllers" expanded="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
