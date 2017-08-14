@@ -5,7 +5,7 @@ The purpose of this hack is to enable Actiance to leverage Microsoft Graph APIs 
 ## Getting Started
 
 ```
-Open Actiance.snl in Visual Studio
+Open Actiance.sln in Visual Studio
 ```
 
 ## Built With
