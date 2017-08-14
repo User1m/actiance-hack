@@ -10,7 +10,7 @@ Open Actiance.snl in Visual Studio
 
 ## Built With
 
-* [BotFramework](https://dev.botframework.com/) - The web framework used
+* [BotFramework](https://dev.botframework.com/) - The bot framework used
 * C#
 * .Net Core
 
