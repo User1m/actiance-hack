@@ -4,27 +4,39 @@ POC with our partner Actiance
 
 ## Getting Started
 
-TBD
+```
+g clone https://github.com/User1m/actiance-hack.get
+```
 
 ### Prerequisites
 
-TBD
+Visual Studio or Visual Studio for mac
 
 ### Installing
 
-TBD
+Open the solution:
 
 ```
-TBD
+App.sln
 ```
+
+Run project in Visual Studio
 
 ## Running the tests
 
-TBD
+```
+Build App.Tests
+```
+
+```
+Run App.Tests
+```
 
 ## Built With
 
-TBD
+* Asp .Net MVC
+* C#
+
 
 ## Authors
 
