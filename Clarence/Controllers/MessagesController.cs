@@ -22,7 +22,8 @@ namespace Actiance
             }
             else
             {
-                HandleSystemMessage(activity);
+                await Conversation.SendAsync(activity, () => new Dialogs.RootDialog());
+                //HandleSystemMessage(activity);
             }
             var response = Request.CreateResponse(HttpStatusCode.OK);
             return response;
