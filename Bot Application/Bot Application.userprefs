@@ -1,0 +1,20 @@
+﻿<Properties StartupConfiguration="{$GUID1$}|">
+  <MonoDevelop.Ide.ItemProperties.Clarence PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="default.htm">
+    <Files>
+      <File FileName="Dialogs/RootDialog.cs" Line="6" Column="19" />
+      <File FileName="Global.asax.cs" Line="13" Column="10" />
+      <File FileName="App_Start/WebApiConfig.cs" Line="8" Column="19" />
+      <File FileName="Controllers/MessagesController.cs" Line="8" Column="19" />
+      <File FileName="Properties/AssemblyInfo.cs" Line="29" Column="21" />
+      <File FileName="Global.asax" Line="2" Column="1" />
+      <File FileName="default.htm" Line="9" Column="61" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MultiItemStartupConfigurations />
+</Properties>

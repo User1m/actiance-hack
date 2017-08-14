@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
+    <StartAction>Project</StartAction>
+    <ApplicationURL>http://localhost:54775</ApplicationURL>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Web Server' ">
+    <StartAction>Project</StartAction>
+    <LaunchUrl>api/messages</LaunchUrl>
+    <ApplicationURL>http://localhost:51001</ApplicationURL>
+  </PropertyGroup>
+</Project>
