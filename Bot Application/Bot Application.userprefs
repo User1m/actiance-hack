@@ -1,15 +1,34 @@
-﻿<Properties StartupConfiguration="{$GUID1$}|">
+﻿<Properties StartupConfiguration="{$GUID1$}|" NuGet.AddPackagesDialog.IncludePrerelease="True">
   <MonoDevelop.Ide.ItemProperties.Clarence PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="default.htm">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Controllers/MessagesController.cs">
     <Files>
-      <File FileName="Dialogs/RootDialog.cs" Line="6" Column="19" />
+      <File FileName="Dialogs/RootDialog.cs" Line="4" Column="21" />
       <File FileName="Global.asax.cs" Line="13" Column="10" />
-      <File FileName="App_Start/WebApiConfig.cs" Line="8" Column="19" />
-      <File FileName="Controllers/MessagesController.cs" Line="8" Column="19" />
+      <File FileName="App_Start/WebApiConfig.cs" Line="6" Column="7" />
+      <File FileName="Controllers/MessagesController.cs" Line="19" Column="56" />
       <File FileName="Properties/AssemblyInfo.cs" Line="29" Column="21" />
       <File FileName="Global.asax" Line="2" Column="1" />
-      <File FileName="default.htm" Line="9" Column="61" />
+      <File FileName="index.htm" Line="13" Column="1" />
+      <File FileName="Web.config" Line="73" Column="17" />
+      <File FileName="packages.config" Line="1" Column="1" />
     </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="Bot Application" expanded="True">
+            <Node name="Clarence" expanded="True">
+              <Node name="References" expanded="True" />
+              <Node name="App_Start" expanded="True" />
+              <Node name="Controllers" expanded="True">
+                <Node name="MessagesController.cs" selected="True" />
+              </Node>
+              <Node name="Dialogs" expanded="True" />
+              <Node name="Properties" expanded="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
