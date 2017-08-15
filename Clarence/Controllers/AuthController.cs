@@ -29,11 +29,16 @@ namespace Actiance.Controllers
             System.Diagnostics.Process.Start(authority);
         }
 
-        [ActionName("DefaultAction")]
-        public string Get()
+        public AuthController()
         {
-            return "hi";
+
         }
+
+        public IHttpActionResult Get(string test)
+        {
+            return Ok("it worked");
+        }
+
 
         public string PostForOauthToken()
         {
