@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace Actiance.Services
@@ -9,6 +10,17 @@ namespace Actiance.Services
     {
         public APIService()
         {
+        }
+
+        public static async Task<TResult> GetFrom<TResult>(string url, string token)
+        {
+            //get from https://graph.microsoft.com/
+            using (var httpClient = new HttpClient())
+            {
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                HttpResponseMessage response = await httpClient.GetAsync(url);
+                return await response.Content.ReadAsAsync<TResult>();
+            }
         }
 
         public static async Task<TResult> PostTo<TResult>(string url, IEnumerable<KeyValuePair<string, string>> postData)
@@ -23,7 +35,6 @@ namespace Actiance.Services
                     content.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
 
                     HttpResponseMessage response = await httpClient.PostAsync(url, content);
-
                     return await response.Content.ReadAsAsync<TResult>();
                 }
             }
