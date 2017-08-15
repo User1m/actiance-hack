@@ -108,7 +108,6 @@
       <HintPath>packages\System.Security.Cryptography.X509Certificates.4.3.0\lib\net46\System.Security.Cryptography.X509Certificates.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.DynamicData" />
-    <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System" />
@@ -127,24 +126,42 @@
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.IdentityModel" />
     <Reference Include="Owin">
       <HintPath>packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin">
-      <HintPath>packages\Microsoft.Owin.3.1.0\lib\net45\Microsoft.Owin.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Security">
-      <HintPath>packages\Microsoft.Owin.Security.3.1.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Security.OpenIdConnect">
-      <HintPath>packages\Microsoft.Owin.Security.OpenIdConnect.3.1.0\lib\net45\Microsoft.Owin.Security.OpenIdConnect.dll</HintPath>
-    </Reference>
-    <Reference Include="System.IdentityModel" />
     <Reference Include="Microsoft.Owin.Security.Cookies">
-      <HintPath>packages\Microsoft.Owin.Security.Cookies.3.1.0\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+      <HintPath>packages\Microsoft.Owin.Security.Cookies-mono.2.0.1-rtw1-20906-007\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.Host.SystemWeb">
-      <HintPath>packages\Microsoft.Owin.Host.SystemWeb.3.1.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+      <HintPath>packages\Microsoft.Owin.Host.SystemWeb-mono.2.0.1-rtw1-20906-007\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Auth">
+      <HintPath>packages\Microsoft.Owin.Auth-mono.0.26.0-pre-20906-007\lib\net40\Microsoft.Owin.Auth.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Cors">
+      <HintPath>packages\Microsoft.AspNet.Cors.5.0.0\lib\net45\System.Web.Cors.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Cors">
+      <HintPath>packages\Microsoft.Owin.Cors-mono.2.0.1-rtw1-20906-007\lib\net45\Microsoft.Owin.Cors.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth">
+      <HintPath>packages\Microsoft.Owin.Security.OAuth-mono.2.0.1-rtw1-20906-007\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Jwt">
+      <HintPath>packages\Microsoft.Owin.Security.Jwt-mono.2.0.1-rtw1-20906-007\lib\net45\Microsoft.Owin.Security.Jwt.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.ActiveDirectory">
+      <HintPath>packages\Microsoft.Owin.Security.ActiveDirectory-mono.2.0.1-rtw1-20906-007\lib\net45\Microsoft.Owin.Security.ActiveDirectory.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.MicrosoftAccount">
+      <HintPath>packages\Microsoft.Owin.Security.MicrosoftAccount-mono.2.0.1-rtw1-20906-007\lib\net45\Microsoft.Owin.Security.MicrosoftAccount.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Diagnostics">
+      <HintPath>packages\Microsoft.Owin.Diagnostics-mono.2.0.1-rtw1-20906-007\lib\net40\Microsoft.Owin.Diagnostics.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin">
+      <HintPath>packages\Microsoft.Owin.2.0.0\lib\net45\Microsoft.Owin.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -170,6 +187,7 @@
     <Compile Include="Services\SubscriptionService.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
