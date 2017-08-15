@@ -1,0 +1,49 @@
+{
+  "$schema": "https://statics.teams.microsoft.com/sdk/v1.0/manifest/MicrosoftTeams.schema.json",
+  "manifestVersion": "1.0",
+  "version": "1.0.0",
+  "id": "51be1678-3fe0-444d-87cd-c265080e9e25",
+  "packageName": "com.actiance.clarence",
+  "developer": {
+    "name": "Actiance",
+    "websiteUrl": "https://www.actiance.com",
+    "privacyUrl": "https://www.microsoft.com/privacy",
+    "termsOfUseUrl": "https://www.microsoft.com/termsofuse"
+  },
+  "name": {
+    "short": "Clarence"
+  },
+  "description": {
+    "short": "Compliance Bot From Actiance",
+    "full": "Compliance Bot in Microsoft Teams"
+  },
+  "icons": {
+    "outline": "actiance20.png",
+    "color": "actiance96.png"
+  },
+  "accentColor": "#e82628",
+  "bots": [
+    {
+      "botId": "120dd201-1c5b-4b99-b67b-b2390e3d17cf",
+      "needsChannelSelector": true,
+      "isNotificationOnly": false,
+      "scopes": ["team", "personal"],
+      "commands": [
+        {
+          "title": "help",
+          "description": "Displays this help message"
+        },
+        {
+          "title": "flag",
+          "description": "Flags content and non-compliant"
+        },
+        {
+          "title": "remove",
+          "description": "Removes a non-compliant content"
+        }
+      ]
+    }
+  ],
+  "permissions": ["identity", "messageTeamMembers"],
+  "validDomains": ["*.ngrok.io"]
+}

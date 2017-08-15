@@ -18,9 +18,7 @@ namespace Actiance.Dialogs
 
         private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<object> result)
         {
-            var activity = await result as Activity;
-            ConfigurationManager.AppSettings["ServiceUrl"] = activity.ServiceUrl;
-            await context.PostAsync($"I just cached your service URL {activity.ServiceUrl}");
+            await context.PostAsync($"HI there!");
 
             context.Wait(MessageReceivedAsync);
         }
