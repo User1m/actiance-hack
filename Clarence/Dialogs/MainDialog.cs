@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
-using Microsoft.Bot.Connector;
-using System.Configuration;
-using System.Web.Http;
 
 namespace Actiance.Dialogs
 {
     [Serializable]
-    public class RootDialog : IDialog<object>
+    public class MainDialog : IDialog<object>
     {
         public Task StartAsync(IDialogContext context)
         {
@@ -19,7 +16,7 @@ namespace Actiance.Dialogs
 
         private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<object> result)
         {
-            await context.PostAsync($"Welcome");
+            await context.PostAsync($"HI there!");
 
             //context.Wait(MessageReceivedAsync);
         }

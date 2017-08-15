@@ -23,6 +23,8 @@ namespace Actiance.Controllers
         private static string aadInstance = ConfigurationManager.AppSettings["ida:AADInstance"];
         private static string tenant = ConfigurationManager.AppSettings["ida:Tenant"];
         private static string redirectUri = ConfigurationManager.AppSettings["ida:RedirectUri"];
+        private static string authTenant = ConfigurationManager.AppSettings["ida:AuthTenant"];
+        private static string scope = ConfigurationManager.AppSettings["ida:Scope"];
         //private static string metadata = string.Format("{0}/{1}/federationmetadata/2007-06/federationmetadata.xml", aadInstance, tenant);
 
         static string authority = string.Format("{0}/{1}/adminconsent?client_id={2}&state=auth&redirect_uri={3}", aadInstance, tenant, clientId, redirectUri);
@@ -31,11 +33,11 @@ namespace Actiance.Controllers
         static string tokenEndpoint = "";
 
         //AUTH CREDENTIALS
-        public static string oauthToken = "";
+        private static string oauthToken = "";
         private static string tenantId = "";
         IEnumerable<KeyValuePair<string, string>> postData = new Dictionary<string, string> {
             { "client_id", clientId },
-            { "scope", "https://graph.microsoft.com/.default" },
+            { "scope", scope },
             { "client_secret", clientSecret },
             { "grant_type", "client_credentials" }
         };
@@ -82,6 +84,15 @@ namespace Actiance.Controllers
             }
         }
 
+        public async Task<string> GetOauthToken()
+        {
+            if (string.IsNullOrEmpty(oauthToken))
+            {
+                await PostForOauthToken();
+            }
+            return oauthToken;
+        }
+
 
         public async Task PostForOauthToken()
         {
@@ -92,7 +103,7 @@ namespace Actiance.Controllers
 
         public static bool NeedsOauthToken()
         {
-            return string.IsNullOrEmpty(oauthToken);
+            return string.IsNullOrEmpty(authTenant);
         }
 
     }

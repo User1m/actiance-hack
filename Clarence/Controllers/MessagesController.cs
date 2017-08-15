@@ -5,6 +5,7 @@ using System.Web.Http;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
 using System;
+using Actiance.Dialogs;
 
 namespace Actiance
 {
@@ -25,12 +26,11 @@ namespace Actiance
         {
             if (activity.Type == ActivityTypes.Message)
             {
-                await Conversation.SendAsync(activity, () => new Dialogs.RootDialog());
+                await Conversation.SendAsync(activity, () => new RootDialog());
             }
             else
             {
-                await Conversation.SendAsync(activity, () => new Dialogs.RootDialog());
-                //HandleSystemMessage(activity);
+                HandleSystemMessage(activity);
             }
             var response = Request.CreateResponse(HttpStatusCode.OK);
             return response;
