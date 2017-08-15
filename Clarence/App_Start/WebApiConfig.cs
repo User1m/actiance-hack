@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System.Web.Http;
+using System.Net.Http.Headers;
+using System.Linq;
 
 namespace Actiance
 {
@@ -17,7 +19,7 @@ namespace Actiance
                 Formatting = Formatting.Indented,
                 NullValueHandling = NullValueHandling.Ignore,
             };
-            
+
             config.MapHttpAttributeRoutes();
 
             config.Routes.MapHttpRoute(
@@ -26,6 +28,9 @@ namespace Actiance
                 defaults: new { id = RouteParameter.Optional }
             );
 
+            var appXmlType = config.Formatters.XmlFormatter.SupportedMediaTypes.FirstOrDefault(t => t.MediaType == "application/xml");
+            config.Formatters.XmlFormatter.SupportedMediaTypes.Remove(appXmlType);
+            config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/json"));
         }
 
     }

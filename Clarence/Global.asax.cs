@@ -1,4 +1,5 @@
 ﻿using System.Web.Http;
+using Actiance.Controllers;
 
 namespace Actiance
 {
@@ -7,6 +8,10 @@ namespace Actiance
         protected void Application_Start()
         {
             GlobalConfiguration.Configure(WebApiConfig.Register);
+            if (AuthController.NeedsOauthToken())
+            {
+                AuthController.AdminConsent();
+            }
         }
     }
 }

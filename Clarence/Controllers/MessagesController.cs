@@ -4,12 +4,19 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
+using System;
 
 namespace Actiance
 {
     [BotAuthentication]
     public class MessagesController : ApiController
     {
+        //[HttpGet]
+        //public string Get(string test = "dafault")
+        //{
+        //    return test;
+        //}
+
         /// <summary>
         /// POST: api/Messages
         /// Receive a message from a user and reply to it

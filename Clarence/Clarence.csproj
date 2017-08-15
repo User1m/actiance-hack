@@ -152,6 +152,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Controllers\AuthController.cs" />
+    <Compile Include="Models\TokenResponse.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
