@@ -4,12 +4,26 @@ using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
 using System.Configuration;
 using System.Web.Http;
+using System.Collections.Generic;
+using System.Web.UI.WebControls;
+using Actiance.App_LocalResources;
+using System.Globalization;
+using System.Resources;
+using System.Reflection;
 
 namespace Actiance.Dialogs
 {
+
     [Serializable]
     public class RootDialog : IDialog<object>
     {
+        ResourceManager rm;
+
+        public RootDialog()
+        {
+            //rm = new ResourceManager("Resources", Assembly.GetExecutingAssembly());
+
+        }
         public Task StartAsync(IDialogContext context)
         {
             context.Wait(MessageReceivedAsync);
@@ -19,9 +33,21 @@ namespace Actiance.Dialogs
 
         private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<object> result)
         {
-            await context.PostAsync($"Welcome");
+            string welcome = string.Format(CultureInfo.InvariantCulture, Resources.ResourceManager.GetString("Welcome"), context.Activity.From.Name);
+            await context.PostAsync(welcome);
 
             //context.Wait(MessageReceivedAsync);
         }
+
+        //private static Attachment GetSigninCard()
+        //{
+        //    var signinCard = new SigninCard
+        //    {
+        //        Text = "BotFramework Sign-in Card",
+        //        Buttons = new List<CardAction> { new CardAction(ActionTypes.Signin, "Sign-in", value: "https://login.microsoftonline.com/") }
+        //    };
+
+        //    return signinCard.ToAttachment();
+        //}
     }
 }
