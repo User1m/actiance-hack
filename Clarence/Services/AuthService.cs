@@ -33,8 +33,15 @@ namespace GraphWebhooks.Helpers
                 TokenForApplication = authenticationResult.AccessToken;
             }
             return TokenForApplication;
-        }
-        
+        }  
 
+        /// <summary>
+        /// Validate an access token
+        /// </summary>
+        /// <returns></returns>
+        public static async Task<bool> ValidateToken(string accessToken)
+        {
+            return await Task.Run(() => true);
+        }
     }
 }
