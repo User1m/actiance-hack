@@ -31,7 +31,7 @@ namespace Actiance.Controllers
         static string tokenEndpoint = "";
 
         //AUTH CREDENTIALS
-        private static string oauthToken = "";
+        public static string oauthToken = "";
         private static string tenantId = "";
         IEnumerable<KeyValuePair<string, string>> postData = new Dictionary<string, string> {
             { "client_id", clientId },
