@@ -1,36 +1,46 @@
 ﻿using Actiance.Models;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http.Formatting;
+using System.Net.Mime;
 using System.Web.Http;
+
 
 namespace Actiance.Controllers
 {
     public class GraphController : ApiController
     {
+        public class NotificationEvent
+        {
+            public IEnumerable<Notification> Value { get; set; }
+        }
+
+
         Func<Notification, IMessageActivity> AsMessage = (note) => new Activity(id: note.SubscriptionId, type: note.ChangeType, value: note);
-        
-        public void Mail([FromBody] IEnumerable<Notification> notes)
+
+        /// <summary>
+        /// Need to return the token for accepting webhooks
+        /// </summary>
+        /// <param name="validationToken"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public IHttpActionResult Subscribe([FromUri] string validationToken)
         {
-            notes.Select(async note => await Conversation.SendAsync(AsMessage(note), () => new Dialogs.NotificationDialog()));
+            return Content(HttpStatusCode.Accepted, validationToken);
         }
 
-        public void Calendar([FromBody] IEnumerable<Notification> notes)
+        [HttpPost]
+        public IHttpActionResult SubscribeNote([FromBody] NotificationEvent notifications)
         {
-            notes.Select(async note => await Conversation.SendAsync(AsMessage(note), () => new Dialogs.NotificationDialog()));
+            notifications.Value.Select(async note => await Conversation.SendAsync(AsMessage(note), () => new Dialogs.NotificationDialog()));
+            return Content(HttpStatusCode.Accepted, "");
         }
 
-        public void GroupConversations([FromBody] IEnumerable<Notification> notes)
-        {
-            notes.Select(async note => await Conversation.SendAsync(AsMessage(note), () => new Dialogs.NotificationDialog()));
-        }
-
-        public void DriveRootItems([FromBody] IEnumerable<Notification> notes)
-        {
-            notes.Select(async note => await Conversation.SendAsync(AsMessage(note), () => new Dialogs.NotificationDialog()));
-        }
     }
 }
