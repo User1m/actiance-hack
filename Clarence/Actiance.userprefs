@@ -1,13 +1,15 @@
 ﻿<Properties StartupConfiguration="{C1A2AE3D-8A3F-439E-908B-44954D2C37CC}|" NuGet.AddPackagesDialog.IncludePrerelease="True">
   <MonoDevelop.Ide.ItemProperties.Clarence PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Controllers/AuthController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Web.config">
     <Files>
-      <File FileName="Controllers/MessagesController.cs" Line="11" Column="12" />
-      <File FileName="Dialogs/RootDialog.cs" Line="6" Column="23" />
-      <File FileName="Web.config" Line="19" Column="35" />
-      <File FileName="Controllers/AuthController.cs" Line="86" Column="53" />
-      <File FileName="Global.asax.cs" Line="11" Column="1" />
-      <File FileName="App_Start/WebApiConfig.cs" Line="33" Column="115" />
+      <File FileName="Controllers/MessagesController.cs" Line="27" Column="1" />
+      <File FileName="Dialogs/RootDialog.cs" Line="36" Column="150" />
+      <File FileName="Controllers/AuthController.cs" Line="80" Column="9" />
+      <File FileName="Services/APIService.cs" Line="17" Column="24" />
+      <File FileName="Dialogs/MainDialog.cs" Line="15" Column="10" />
+      <File FileName="App_Start/Startup.Auth.cs" Line="33" Column="72" />
+      <File FileName="App_LocalResources/Resources.resx" Line="19" Column="60" />
+      <File FileName="Web.config" Line="21" Column="37" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
@@ -15,5 +17,11 @@
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
-  <MultiItemStartupConfigurations />
+  <MultiItemStartupConfigurations>
+    <MultiItemSolutionRunConfiguration Id="run" Name="run">
+      <Items>
+        <StartupItem ItemId="{C1A2AE3D-8A3F-439E-908B-44954D2C37CC}" ItemName="Clarence" />
+      </Items>
+    </MultiItemSolutionRunConfiguration>
+  </MultiItemStartupConfigurations>
 </Properties>

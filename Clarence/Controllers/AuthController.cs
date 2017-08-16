@@ -12,6 +12,7 @@ using System.Web.Http;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Actiance.Models;
+using Actiance.Services;
 
 namespace Actiance.Controllers
 {
@@ -23,6 +24,8 @@ namespace Actiance.Controllers
         private static string aadInstance = ConfigurationManager.AppSettings["ida:AADInstance"];
         private static string tenant = ConfigurationManager.AppSettings["ida:Tenant"];
         private static string redirectUri = ConfigurationManager.AppSettings["ida:RedirectUri"];
+        private static string authTenant = ConfigurationManager.AppSettings["ida:AuthTenant"];
+        private static string scope = ConfigurationManager.AppSettings["ida:Scope"];
         //private static string metadata = string.Format("{0}/{1}/federationmetadata/2007-06/federationmetadata.xml", aadInstance, tenant);
 
         static string authority = string.Format("{0}/{1}/adminconsent?client_id={2}&state=auth&redirect_uri={3}", aadInstance, tenant, clientId, redirectUri);
@@ -31,11 +34,11 @@ namespace Actiance.Controllers
         static string tokenEndpoint = "";
 
         //AUTH CREDENTIALS
-        public static string oauthToken = "";
+        private static string oauthToken = "";
         private static string tenantId = "";
         IEnumerable<KeyValuePair<string, string>> postData = new Dictionary<string, string> {
             { "client_id", clientId },
-            { "scope", "https://graph.microsoft.com/.default" },
+            { "scope", scope },
             { "client_secret", clientSecret },
             { "grant_type", "client_credentials" }
         };
@@ -64,35 +67,28 @@ namespace Actiance.Controllers
 
         }
 
-        public async Task<TResult> PostForClientCredentials<TResult>(string url, IEnumerable<KeyValuePair<string, string>> postData)
+
+        public async Task<string> GetOauthToken()
         {
-            //post to https://login.microsoftonline.com/db35d98a-b61b-4362-90e6-22237a243507/oauth2/v2.0/token
-
-            using (var httpClient = new HttpClient())
+            if (string.IsNullOrEmpty(oauthToken))
             {
-                using (var content = new FormUrlEncodedContent(postData))
-                {
-                    content.Headers.Clear();
-                    content.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
-
-                    HttpResponseMessage response = await httpClient.PostAsync(url, content);
-
-                    return await response.Content.ReadAsAsync<TResult>();
-                }
+                await PostForOauthToken();
             }
+            return oauthToken;
         }
 
 
         public async Task PostForOauthToken()
         {
-            TokenResponse tokenResponse = await PostForClientCredentials<TokenResponse>(tokenEndpoint, postData);
+            //post to https://login.microsoftonline.com/db35d98a-b61b-4362-90e6-22237a243507/oauth2/v2.0/token
+            TokenResponse tokenResponse = await APIService.PostTo<TokenResponse>(tokenEndpoint, postData);
             oauthToken = tokenResponse.access_token;
             //Console.WriteLine(oauthToken);
         }
 
         public static bool NeedsOauthToken()
         {
-            return string.IsNullOrEmpty(oauthToken);
+            return string.IsNullOrEmpty(authTenant);
         }
 
     }
