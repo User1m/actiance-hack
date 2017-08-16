@@ -1,18 +1,15 @@
 ﻿<Properties StartupConfiguration="{C1A2AE3D-8A3F-439E-908B-44954D2C37CC}|" NuGet.AddPackagesDialog.IncludePrerelease="True">
   <MonoDevelop.Ide.ItemProperties.Clarence PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Global.asax.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Dialogs/AskQuestionsDialog.cs">
     <Files>
-      <File FileName="Controllers/MessagesController.cs" Line="27" Column="1" />
-      <File FileName="Dialogs/RootDialog.cs" Line="19" Column="18" />
+      <File FileName="Controllers/MessagesController.cs" Line="28" Column="14" />
+      <File FileName="Dialogs/RootDialog.cs" Line="61" Column="52" />
       <File FileName="Controllers/AuthController.cs" Line="87" Column="83" />
       <File FileName="Services/APIService.cs" Line="58" Column="33" />
-      <File FileName="App_LocalResources/Resources.resx" Line="19" Column="60" />
-      <File FileName="Web.config" Line="22" Column="31" />
-      <File FileName="Dialogs/AskQuestionsDialog.cs" Line="16" Column="9" />
-      <File FileName="Dialogs/NotificationDialog.cs" Line="1" Column="1" />
-      <File FileName="Dialogs/FlagIssueDialog.cs" Line="23" Column="6" />
-      <File FileName="Helpers/Middleware.cs" Line="21" Column="10" />
-      <File FileName="Global.asax.cs" Line="14" Column="26" />
+      <File FileName="App_LocalResources/Resources.resx" Line="38" Column="17" />
+      <File FileName="Dialogs/AskQuestionsDialog.cs" Line="20" Column="27" />
+      <File FileName="Dialogs/SupportDialog.cs" Line="17" Column="55" />
+      <File FileName="Dialogs/FlagIssueDialog.cs" Line="24" Column="13" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
@@ -20,6 +17,8 @@
     <BreakpointStore>
       <Breakpoint enabled="false" file="/Users/claudius/Documents/workspace/Hackfests/Actiance/Clarence/Services/APIService.cs" relfile="Services/APIService.cs" line="27" column="1" />
       <Breakpoint enabled="false" file="/Users/claudius/Documents/workspace/Hackfests/Actiance/Clarence/Controllers/AuthController.cs" relfile="Controllers/AuthController.cs" line="89" column="1" />
+      <Breakpoint enabled="false" file="/Users/claudius/Documents/workspace/Hackfests/Actiance/Clarence/Dialogs/AskQuestionsDialog.cs" relfile="Dialogs/AskQuestionsDialog.cs" line="37" column="1" />
+      <Breakpoint file="/Users/claudius/Documents/workspace/Hackfests/Actiance/Clarence/Dialogs/AskQuestionsDialog.cs" relfile="Dialogs/AskQuestionsDialog.cs" line="26" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />

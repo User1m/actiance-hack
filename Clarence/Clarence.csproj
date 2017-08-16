@@ -160,6 +160,7 @@
     <Compile Include="Helpers\Storage.cs" />
     <Compile Include="Dialogs\AskQuestionsDialog.cs" />
     <Compile Include="Helpers\Middleware.cs" />
+    <Compile Include="Dialogs\SupportDialog.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
