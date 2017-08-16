@@ -1,14 +1,12 @@
 ﻿using Actiance.Models;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.Http.Formatting;
-using System.Net.Mime;
+using System.Net.Http;
+using System.Text;
 using System.Web.Http;
 
 
@@ -21,7 +19,6 @@ namespace Actiance.Controllers
             public IEnumerable<Notification> Value { get; set; }
         }
 
-
         Func<Notification, IMessageActivity> AsMessage = (note) => new Activity(id: note.SubscriptionId, type: note.ChangeType, value: note);
 
         /// <summary>
@@ -29,18 +26,15 @@ namespace Actiance.Controllers
         /// </summary>
         /// <param name="validationToken"></param>
         /// <returns></returns>
-        [HttpPost]
-        public IHttpActionResult Subscribe([FromUri] string validationToken)
+        public HttpResponseMessage Post([FromUri] string validationToken)
         {
-            return Content(HttpStatusCode.Accepted, validationToken);
+            return new HttpResponseMessage { StatusCode = HttpStatusCode.OK, Content = new StringContent(validationToken, Encoding.UTF8, "text/plain") };
         }
 
-        [HttpPost]
-        public IHttpActionResult SubscribeNote([FromBody] NotificationEvent notifications)
+        public IHttpActionResult Post([FromBody] NotificationEvent notifications)
         {
             notifications.Value.Select(async note => await Conversation.SendAsync(AsMessage(note), () => new Dialogs.NotificationDialog()));
             return Content(HttpStatusCode.Accepted, "");
         }
-
     }
 }

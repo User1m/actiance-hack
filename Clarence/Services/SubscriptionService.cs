@@ -1,10 +1,4 @@
-﻿/*
- *  Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license.
- *  See LICENSE in the source repository root for complete license information.
- */
-
-
-namespace GraphWebhooks.Controllers
+﻿namespace GraphWebhooks.Controllers
 {
     public class SubscriptionService
     {

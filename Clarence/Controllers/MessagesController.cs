@@ -1,10 +1,7 @@
-﻿using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
-using System;
 using Actiance.Dialogs;
 
 namespace Actiance
@@ -12,54 +9,28 @@ namespace Actiance
     [BotAuthentication]
     public class MessagesController : ApiController
     {
-        //[HttpGet]
-        //public string Get(string test = "dafault")
-        //{
-        //    return test;
-        //}
-
         /// <summary>
         /// POST: api/Messages
         /// Receive a message from a user and reply to it
         /// </summary>
-        public async Task<HttpResponseMessage> Post([FromBody]Activity activity)
+        public async Task<IHttpActionResult> Post([FromBody]Activity activity)
         {
             if (activity.Type == ActivityTypes.Message)
-            {
                 await Conversation.SendAsync(activity, () => new RootDialog());
-            }
             else
-            {
                 HandleSystemMessage(activity);
-            }
-            var response = Request.CreateResponse(HttpStatusCode.OK);
-            return response;
+            return Ok();
         }
 
         private Activity HandleSystemMessage(Activity message)
         {
-            if (message.Type == ActivityTypes.DeleteUserData)
+            switch(message.Type)
             {
-                // Implement user deletion here
-                // If we handle user deletion, return a real message
-            }
-            else if (message.Type == ActivityTypes.ConversationUpdate)
-            {
-                // Handle conversation state changes, like members being added and removed
-                // Use Activity.MembersAdded and Activity.MembersRemoved and Activity.Action for info
-                // Not available in all channels
-            }
-            else if (message.Type == ActivityTypes.ContactRelationUpdate)
-            {
-                // Handle add/remove from contact lists
-                // Activity.From + Activity.Action represent what happened
-            }
-            else if (message.Type == ActivityTypes.Typing)
-            {
-                // Handle knowing tha the user is typing
-            }
-            else if (message.Type == ActivityTypes.Ping)
-            {
+                case ActivityTypes.DeleteUserData: break; // Implement user deletion here if we handle user deletion, return a real message
+                case ActivityTypes.ConversationUpdate: break; // Handle state changes like member adding/removing
+                case ActivityTypes.ContactRelationUpdate: break; // add/remove from contact lists
+                case ActivityTypes.Typing: break; // Handle knowing user is typing
+                case ActivityTypes.Ping: break;
             }
 
             return null;

@@ -40,7 +40,7 @@ namespace Actiance.Dialogs
             string welcomeMsg = string.Format(CultureInfo.InvariantCulture, Resources.ResourceManager.GetString("Welcome"), userName);
             await context.PostAsync(welcomeMsg);
 
-            //context.Wait(MessageReceivedAsync);
+            context.Wait(MessageReceivedAsync);
         }
 
         //private static Attachment GetSigninCard()

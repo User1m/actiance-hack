@@ -28,17 +28,16 @@ namespace Actiance.Controllers
         private static string authTenant = ConfigurationManager.AppSettings["ida:AuthTenant"];
         private static string scope = ConfigurationManager.AppSettings["ida:Scope"];
         //private static string metadata = string.Format("{0}/{1}/federationmetadata/2007-06/federationmetadata.xml", aadInstance, tenant);
-
-        static string authority = string.Format("{0}/{1}/adminconsent?client_id={2}&state=auth&redirect_uri={3}", aadInstance, tenant, clientId, redirectUri);
+        static string authority = $"{aadInstance}/{tenant}/adminconsent?client_id={clientId}&state=auth&redirect_uri={redirectUri}";
         //eg. "https://login.microsoftonline.com/actiancehack.onmicrosoft.com/adminconsent?client_id=e5b5c8c1-2b25-4437-ba24-98d665a10f05&state=12345&redirect_uri=https://5b59e015.ngrok.io"
 
-        static string tokenEndpoint = "{0}/{1}/oauth2/v2.0/token";
+
 
         //AUTH CREDENTIALS
         private static string oauthToken = "";
         static IEnumerable<KeyValuePair<string, string>> postData = new Dictionary<string, string> {
             { "client_id", clientId },
-            { "scope", string.Format("{0}/{1}",msGraph,scope) },
+            { "scope", $"{msGraph}/{scope}" },
             { "client_secret", clientSecret },
             { "grant_type", "client_credentials" }
         };
@@ -81,14 +80,14 @@ namespace Actiance.Controllers
             return oauthToken;
         }
 
-
+        /// <summary>
+        /// Post to https://login.microsoftonline.com/db35d98a-b61b-4362-90e6-22237a243507/oauth2/v2.0/token
+        /// </summary>
+        /// <returns></returns>
         public static async Task PostForOauthToken()
-        {
-            tokenEndpoint = string.Format(tokenEndpoint, aadInstance, authTenant);
-            //post to https://login.microsoftonline.com/db35d98a-b61b-4362-90e6-22237a243507/oauth2/v2.0/token
-            TokenResponse tokenResponse = await APIService.PostTo<TokenResponse>(tokenEndpoint, postData);
+        { 
+            TokenResponse tokenResponse = await APIService.PostTo<TokenResponse>($"{aadInstance}/{authTenant}/oauth2/v2.0/token", postData);
             oauthToken = tokenResponse.access_token;
-            //Console.WriteLine(oauthToken);
         }
 
         public static bool NeedsOauthToken()
