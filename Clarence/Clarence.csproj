@@ -139,6 +139,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\GraphController.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
+    <Compile Include="Controllers\UserProfileController.cs" />
     <Compile Include="Dialogs\NotificationDialog.cs" />
     <Compile Include="Dialogs\RootDialog.cs" />
     <Compile Include="Global.asax.cs">
@@ -146,12 +147,14 @@
     </Compile>
     <Compile Include="Models\Notification.cs" />
     <Compile Include="Models\Subscription.cs" />
+    <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\SubscriptionService.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Models\TokenResponse.cs" />
+    <Compile Include="UserProfileHelper.cs" />
     <Compile Include="Models\Users.cs" />
     <Compile Include="Models\TokenError.cs" />
     <Compile Include="Dialogs\MainDialog.cs" />
