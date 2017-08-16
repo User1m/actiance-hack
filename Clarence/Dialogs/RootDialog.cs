@@ -17,17 +17,10 @@ namespace Actiance.Dialogs
     [Serializable]
     public class RootDialog : IDialog<object>
     {
-        ResourceManager rm;
 
-        public RootDialog()
-        {
-            //rm = new ResourceManager("Resources", Assembly.GetExecutingAssembly());
-
-        }
         public Task StartAsync(IDialogContext context)
         {
             context.Wait(MessageReceivedAsync);
-
             return Task.CompletedTask;
         }
 

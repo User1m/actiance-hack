@@ -1,15 +1,17 @@
 ﻿<Properties StartupConfiguration="{C1A2AE3D-8A3F-439E-908B-44954D2C37CC}|" NuGet.AddPackagesDialog.IncludePrerelease="True">
   <MonoDevelop.Ide.ItemProperties.Clarence PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Web.config">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Models/TokenResponse.cs">
     <Files>
       <File FileName="Controllers/MessagesController.cs" Line="27" Column="1" />
-      <File FileName="Dialogs/RootDialog.cs" Line="36" Column="150" />
-      <File FileName="Controllers/AuthController.cs" Line="80" Column="9" />
-      <File FileName="Services/APIService.cs" Line="17" Column="24" />
+      <File FileName="Dialogs/RootDialog.cs" Line="23" Column="48" />
+      <File FileName="Controllers/AuthController.cs" Line="15" Column="20" />
+      <File FileName="Services/APIService.cs" Line="55" Column="15" />
       <File FileName="Dialogs/MainDialog.cs" Line="15" Column="10" />
-      <File FileName="App_Start/Startup.Auth.cs" Line="33" Column="72" />
       <File FileName="App_LocalResources/Resources.resx" Line="19" Column="60" />
-      <File FileName="Web.config" Line="21" Column="37" />
+      <File FileName="Models/Users.cs" Line="36" Column="37" />
+      <File FileName="Web.config" Line="22" Column="31" />
+      <File FileName="Models/Storage.cs" Line="8" Column="16" />
+      <File FileName="Models/TokenResponse.cs" Line="4" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />

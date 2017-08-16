@@ -3,14 +3,19 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Microsoft.Graph;
+using Actiance.Controllers;
+using System.Globalization;
+using System.Configuration;
+using Actiance.Models;
 
 namespace Actiance.Services
 {
     public class APIService
     {
-        public APIService()
-        {
-        }
+        public APIService() { }
+
+        private static string graphEndpoint = string.Format("{0}/{1}", AuthController.msGraph, "v1.0");
 
         public static async Task<TResult> GetFrom<TResult>(string url, string token)
         {
@@ -38,6 +43,16 @@ namespace Actiance.Services
                     return await response.Content.ReadAsAsync<TResult>();
                 }
             }
+        }
+
+        public static async void GetUsers()
+        {
+            Storage.userStore = await GetFrom<List<User>>(string.Format("{0}/users/", graphEndpoint), AuthController.GetOauthToken().ToString());
+        }
+
+        public static async void GetManager(string user)
+        {
+            User users = await GetFrom<User>(string.Format("{0}/users/{1}/Manager/", graphEndpoint, user), AuthController.GetOauthToken().ToString());
         }
     }
 }

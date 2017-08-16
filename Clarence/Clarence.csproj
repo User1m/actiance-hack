@@ -160,6 +160,7 @@
     <Compile Include="App_LocalResources\Resources.Designer.cs">
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Models\Storage.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

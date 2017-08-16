@@ -23,6 +23,7 @@ namespace Actiance.Controllers
         private static string clientSecret = ConfigurationManager.AppSettings["ida:ClientSecret"];
         private static string aadInstance = ConfigurationManager.AppSettings["ida:AADInstance"];
         private static string tenant = ConfigurationManager.AppSettings["ida:Tenant"];
+        public static string msGraph = ConfigurationManager.AppSettings["ida:MSGraph"];
         private static string redirectUri = ConfigurationManager.AppSettings["ida:RedirectUri"];
         private static string authTenant = ConfigurationManager.AppSettings["ida:AuthTenant"];
         private static string scope = ConfigurationManager.AppSettings["ida:Scope"];
@@ -36,9 +37,9 @@ namespace Actiance.Controllers
         //AUTH CREDENTIALS
         private static string oauthToken = "";
         private static string tenantId = "";
-        IEnumerable<KeyValuePair<string, string>> postData = new Dictionary<string, string> {
+        static IEnumerable<KeyValuePair<string, string>> postData = new Dictionary<string, string> {
             { "client_id", clientId },
-            { "scope", scope },
+            { "scope", string.Format("{0}/{1}",msGraph,scope) },
             { "client_secret", clientSecret },
             { "grant_type", "client_credentials" }
         };
@@ -68,7 +69,7 @@ namespace Actiance.Controllers
         }
 
 
-        public async Task<string> GetOauthToken()
+        public static async Task<string> GetOauthToken()
         {
             if (string.IsNullOrEmpty(oauthToken))
             {
@@ -78,7 +79,7 @@ namespace Actiance.Controllers
         }
 
 
-        public async Task PostForOauthToken()
+        public static async Task PostForOauthToken()
         {
             //post to https://login.microsoftonline.com/db35d98a-b61b-4362-90e6-22237a243507/oauth2/v2.0/token
             TokenResponse tokenResponse = await APIService.PostTo<TokenResponse>(tokenEndpoint, postData);
