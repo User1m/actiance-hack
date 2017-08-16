@@ -5,7 +5,7 @@ using Microsoft.Bot.Builder.Dialogs;
 namespace Actiance.Dialogs
 {
     [Serializable]
-    public class FlagIssueDialog : IDialog<object>
+    public class AskQuestionsDialog : IDialog<object>
     {
         public Task StartAsync(IDialogContext context)
         {

@@ -28,15 +28,15 @@ namespace Actiance.Dialogs
 
         private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<object> result)
         {
-            //get uset provide
             string contextName = context.Activity.From.Name;
             if (Storage.user != null)
             {
+                //get user profie
                 await APIService.GetUser(contextName);
                 await APIService.GetManager(contextName);
             }
 
-            string userName = (string.IsNullOrEmpty(Storage.user.GivenName) ? context.Activity.From.Name : Storage.user.GivenName);
+            string userName = (Storage.user == null ? context.Activity.From.Name : Storage.user.GivenName);
             string welcomeMsg = string.Format(CultureInfo.InvariantCulture, Resources.ResourceManager.GetString("Welcome"), userName);
             await context.PostAsync(welcomeMsg);
 
