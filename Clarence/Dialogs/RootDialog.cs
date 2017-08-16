@@ -10,6 +10,8 @@ using Actiance.App_LocalResources;
 using System.Globalization;
 using System.Resources;
 using System.Reflection;
+using Actiance.Services;
+using Actiance.Helpers;
 
 namespace Actiance.Dialogs
 {
@@ -26,8 +28,17 @@ namespace Actiance.Dialogs
 
         private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<object> result)
         {
-            string welcome = string.Format(CultureInfo.InvariantCulture, Resources.ResourceManager.GetString("Welcome"), context.Activity.From.Name);
-            await context.PostAsync(welcome);
+            //get uset provide
+            string contextName = context.Activity.From.Name;
+            if (Storage.user != null)
+            {
+                await APIService.GetUser(contextName);
+                await APIService.GetManager(contextName);
+            }
+
+            string userName = (string.IsNullOrEmpty(Storage.user.GivenName) ? context.Activity.From.Name : Storage.user.GivenName);
+            string welcomeMsg = string.Format(CultureInfo.InvariantCulture, Resources.ResourceManager.GetString("Welcome"), userName);
+            await context.PostAsync(welcomeMsg);
 
             //context.Wait(MessageReceivedAsync);
         }

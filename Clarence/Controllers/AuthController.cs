@@ -32,11 +32,10 @@ namespace Actiance.Controllers
         static string authority = string.Format("{0}/{1}/adminconsent?client_id={2}&state=auth&redirect_uri={3}", aadInstance, tenant, clientId, redirectUri);
         //eg. "https://login.microsoftonline.com/actiancehack.onmicrosoft.com/adminconsent?client_id=e5b5c8c1-2b25-4437-ba24-98d665a10f05&state=12345&redirect_uri=https://5b59e015.ngrok.io"
 
-        static string tokenEndpoint = "";
+        static string tokenEndpoint = "{0}/{1}/oauth2/v2.0/token";
 
         //AUTH CREDENTIALS
         private static string oauthToken = "";
-        private static string tenantId = "";
         static IEnumerable<KeyValuePair<string, string>> postData = new Dictionary<string, string> {
             { "client_id", clientId },
             { "scope", string.Format("{0}/{1}",msGraph,scope) },
@@ -45,11 +44,10 @@ namespace Actiance.Controllers
         };
 
 
-        public static void AdminConsent()
+        public static void GetAdminConsent()
         {
             System.Diagnostics.Process.Start(authority);
         }
-
 
         [HttpGet]
         public async Task<string> Get()
@@ -58,22 +56,27 @@ namespace Actiance.Controllers
             string failure = "Something went wrong. Please restart the Bot";
 
             var queryString = this.Request.GetQueryNameValuePairs();
-            tenantId = queryString.FirstOrDefault(x => x.Key == "tenant").Value;
+            authTenant = queryString.FirstOrDefault(x => x.Key == "tenant").Value;
 
-            tokenEndpoint = string.Format("{0}/{1}/oauth2/v2.0/token", aadInstance, tenantId);
+            await GetToken();
 
-            await PostForOauthToken();
+            //APIService.GetUsers();
 
-            return (string.IsNullOrEmpty(AuthController.tenantId) ? failure : result);
-
+            return (string.IsNullOrEmpty(authTenant) ? failure : result);
         }
 
+        public async Task GetToken()
+        {
+            await PostForOauthToken();
+        }
 
         public static async Task<string> GetOauthToken()
         {
             if (string.IsNullOrEmpty(oauthToken))
             {
                 await PostForOauthToken();
+                //GetAdminConsent();
+                //return string.Empty;
             }
             return oauthToken;
         }
@@ -81,6 +84,7 @@ namespace Actiance.Controllers
 
         public static async Task PostForOauthToken()
         {
+            tokenEndpoint = string.Format(tokenEndpoint, aadInstance, authTenant);
             //post to https://login.microsoftonline.com/db35d98a-b61b-4362-90e6-22237a243507/oauth2/v2.0/token
             TokenResponse tokenResponse = await APIService.PostTo<TokenResponse>(tokenEndpoint, postData);
             oauthToken = tokenResponse.access_token;

@@ -7,7 +7,7 @@ using Microsoft.Graph;
 using Actiance.Controllers;
 using System.Globalization;
 using System.Configuration;
-using Actiance.Models;
+using Actiance.Helpers;
 
 namespace Actiance.Services
 {
@@ -45,14 +45,19 @@ namespace Actiance.Services
             }
         }
 
-        public static async void GetUsers()
+        public static async Task GetUsers()
         {
-            Storage.userStore = await GetFrom<List<User>>(string.Format("{0}/users/", graphEndpoint), AuthController.GetOauthToken().ToString());
+            Storage.userStore = await GetFrom<List<User>>(string.Format("{0}/users/", graphEndpoint), await AuthController.GetOauthToken());
         }
 
-        public static async void GetManager(string user)
+        public static async Task GetUser(string userName)
         {
-            User users = await GetFrom<User>(string.Format("{0}/users/{1}/Manager/", graphEndpoint, user), AuthController.GetOauthToken().ToString());
+            Storage.user = await GetFrom<User>(string.Format("{0}/users/{1}@actiancehack.onmicrosoft.com", graphEndpoint, userName), await AuthController.GetOauthToken());
+        }
+
+        public static async Task GetManager(string userId)
+        {
+            Storage.manager = await GetFrom<User>(string.Format("{0}/users/{1}/Manager/", graphEndpoint, userId), await AuthController.GetOauthToken());
         }
     }
 }
