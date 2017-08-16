@@ -13,15 +13,30 @@
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
 	<data name="Welcome">
-	Hi {0}, I'm Clarence, the Actiance Compliance bot.😊 
-	I can help you and your team operate in a compliant manner. 
-	Just mention me in your channel (by typing `@Clarence` ), followed by a question. For example
+Hi {0}, I'm Clarence, the Actiance Compliance bot.😊 
+I can help you and your team operate in a compliant manner. 
+Just mention me in your channel (by typing `@Clarence` ), followed by a question. 
 
-	@Clarence ask: "Can I share my SSN here?"
+For example:
+`@Clarence ask: Can I share my SSN here?`
+
+What would you like to do?
 	</data>
 	<data name="Help">
 	   For more info, just say "@Clarence help".
 	</data>
+	<data name="HelpMessage">
+Hi here are things I can do:
+
+1. Flag non-compliant activities
+    Example `@Clarence flag: the last message from Beth`
+2. Notify specific people in the channel
+    Example `@Clarence notify: the admin`
+3. Answer compliance questions
+    Example `@Clarence question: Can I share my SSN?`
+
+Hope that helps!
+    </data>
 	<!--<data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
 	<data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
 		<value>[base64 mime encoded serialized .NET Framework object]</value>

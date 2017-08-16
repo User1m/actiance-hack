@@ -58,5 +58,11 @@ namespace Actiance.App_LocalResources {
                 return ResourceManager.GetString("Help", resourceCulture);
             }
         }
+        
+        internal static string HelpMessage {
+            get {
+                return ResourceManager.GetString("HelpMessage", resourceCulture);
+            }
+        }
     }
 }
