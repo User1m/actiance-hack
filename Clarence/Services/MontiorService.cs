@@ -21,7 +21,8 @@ namespace Actiance.Services
 
             foreach (Message entry in userMessages)
             {
-                if (entry.BodyPreview.Contains(Resources.ResourceManager.GetString("DLPPhrase")))
+                //if (entry.BodyPreview.Contains(Resources.ResourceManager.GetString("DLPPhrase")))
+                if (SimpleDLP.containsRestrictedPhrases(entry.BodyPreview))
                 {
                     Console.WriteLine("here");
                     var members = await MessagesController.GetConverationMembers();

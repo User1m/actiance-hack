@@ -11,9 +11,9 @@ namespace Actiance.Helpers
         public static List<User> userStore { get; set; } = null;
         public static User manager { get; set; } = null;
         public static User user { get; set; } = null;
-        public static Activity activity { get; set; }
-        public static IDialogContext context { get; set; }
-        public static Dictionary<string, IMessageDeltaCollectionPage> deltaStore { get; set; } = null;
+        public static Activity activity { get; set; } = null;
+        public static IDialogContext context { get; set; } = null;
+        public static Dictionary<string, IMessageDeltaCollectionPage> deltaStore { get; set; } = new Dictionary<string, IMessageDeltaCollectionPage>();
         public static Dictionary<string, List<Message>> userMessages { get; set; } = new Dictionary<string, List<Message>>();
     }
 }

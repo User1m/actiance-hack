@@ -55,6 +55,7 @@ namespace Actiance.Dialogs
                     catch (Exception e)
                     {
                         Console.WriteLine($"ERROR IN BACKGROUND THREAD: {e.Message}");
+                        Console.WriteLine($"ERROR IN BACKGROUND THREAD: {e.StackTrace}");
                     }
                 }).Start();
             }
