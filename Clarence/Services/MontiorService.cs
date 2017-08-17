@@ -13,39 +13,40 @@ namespace Actiance.Services
 {
     public static class MontiorService
     {
-        public async static Task monitorMessages()
+        public async static Task<bool> MonitorMessages()
         {
             var messages = await APIService.GetMessageDeltasForUser(Storage.user.Id);
 
             foreach (KeyValuePair<string, List<Message>> entry in messages)
             {
+                var tasks = new List<Task>();
                 string currentUserId = entry.Key;
                 entry.Value.ForEach(
-                  async (x) =>
+                async (x) =>
                 {
                     if (x.BodyPreview.Contains(Resources.ResourceManager.GetString("DLPPhrase")))
                     {
                         Console.WriteLine("here");
-                        var tasks = new List<Task>();
                         var members = await MessagesController.GetConverationMembers();
                         foreach (var member in members)
                         {
                             if (member.ObjectId == currentUserId)
                             {
-                                tasks.Add(MessageUserAsync(member));
+                                //message user once
+                                tasks.Add(SendComplianceMsgAsync(member, x.BodyPreview));
+                                break;
                             }
                         }
-                        await Task.WhenAll(tasks);
                     }
-
                 });
-
+                await Task.WhenAll(tasks);
             }
+            return true;
         }
 
-        public static async Task MessageUserAsync(TeamsChannelAccount user)
+        public static async Task SendComplianceMsgAsync(TeamsChannelAccount user, string msg)
         {
-            await MessagesController.MessageUser(user);
+            await MessagesController.MessageUserAndManager(user, msg);
         }
     }
 }

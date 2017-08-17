@@ -1,12 +1,13 @@
 ﻿<Properties StartupConfiguration="{C1A2AE3D-8A3F-439E-908B-44954D2C37CC}|" NuGet.AddPackagesDialog.IncludePrerelease="True">
   <MonoDevelop.Ide.ItemProperties.Clarence PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Services/APIService.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Controllers/MessagesController.cs">
     <Files>
-      <File FileName="Controllers/MessagesController.cs" Line="101" Column="14" />
-      <File FileName="Dialogs/MainDialog.cs" Line="50" Column="56" />
-      <File FileName="Services/APIService.cs" Line="96" Column="92" />
-      <File FileName="Services/MontiorService.cs" Line="18" Column="1" />
+      <File FileName="Controllers/MessagesController.cs" Line="102" Column="16" />
+      <File FileName="Dialogs/MainDialog.cs" Line="53" Column="19" />
+      <File FileName="Services/APIService.cs" Line="113" Column="1" />
+      <File FileName="Services/MontiorService.cs" Line="37" Column="1" />
       <File FileName="Controllers/AuthController.cs" Line="24" Column="15" />
+      <File FileName="App_LocalResources/Resources.resx" Line="73" Column="16" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -15,13 +16,13 @@
             <Node name="Clarence" expanded="True">
               <Node name="App_LocalResources" expanded="True" />
               <Node name="App_Start" expanded="True" />
-              <Node name="Controllers" expanded="True" />
+              <Node name="Controllers" expanded="True">
+                <Node name="MessagesController.cs" selected="True" />
+              </Node>
               <Node name="Dialogs" expanded="True" />
               <Node name="Helpers" expanded="True" />
               <Node name="Models" expanded="True" />
-              <Node name="Services" expanded="True">
-                <Node name="APIService.cs" selected="True" />
-              </Node>
+              <Node name="Services" expanded="True" />
               <Node name="Global.asax" expanded="True" />
             </Node>
           </Node>
@@ -32,8 +33,9 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
-      <Breakpoint file="/Users/claudius/Documents/workspace/Hackfests/Actiance/Clarence/Services/MontiorService.cs" relfile="Services/MontiorService.cs" line="18" column="1" />
-      <Breakpoint file="/Users/claudius/Documents/workspace/Hackfests/Actiance/Clarence/Services/APIService.cs" relfile="Services/APIService.cs" line="113" column="1" />
+      <Breakpoint file="/Users/claudius/Documents/workspace/Hackfests/Actiance/Clarence/Controllers/MessagesController.cs" relfile="Controllers/MessagesController.cs" line="94" column="1" />
+      <Breakpoint file="/Users/claudius/Documents/workspace/Hackfests/Actiance/Clarence/Controllers/MessagesController.cs" relfile="Controllers/MessagesController.cs" line="105" column="1" />
+      <Breakpoint file="/Users/claudius/Documents/workspace/Hackfests/Actiance/Clarence/Controllers/MessagesController.cs" relfile="Controllers/MessagesController.cs" line="116" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />

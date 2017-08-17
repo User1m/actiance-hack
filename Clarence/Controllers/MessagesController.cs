@@ -8,8 +8,7 @@ using System;
 using Actiance.Services;
 using Microsoft.Bot.Connector.Teams;
 using Microsoft.Bot.Connector.Teams.Models;
-using System.Globalization;
-using Microsoft.Bot.Builder.Resource;
+using Actiance.App_LocalResources;
 
 namespace Actiance
 {
@@ -82,11 +81,13 @@ namespace Actiance
         public static async Task<TeamsChannelAccount[]> GetConverationMembers()
         {
             // Fetch the members in the current conversation
-            TeamsChannelAccount[] members = await connector.Conversations.GetTeamsConversationMembersAsync(Storage.activity.Conversation.Id, Storage.activity.GetTenantId());
+            var convoId = Storage.activity.Conversation.Id;
+            var tenantId = Storage.activity.GetTenantId();
+            var members = await connector.Conversations.GetTeamsConversationMembersAsync(convoId, tenantId);
             return members;
         }
 
-        public static async Task MessageUser(TeamsChannelAccount user)
+        public static async Task MessageUserAndManager(TeamsChannelAccount user, string msg = "")
         {
             // Create or get existing chat conversation with user
             var response = connector.Conversations.CreateOrGetDirectConversation(Storage.activity.Recipient, user, Storage.activity.GetTenantId());
@@ -96,10 +97,13 @@ namespace Actiance
             {
                 manager = await APIService.GetManager(user.ObjectId);
             }
+            msg = (string.IsNullOrEmpty(msg)) ? msg : $"\"{msg}\"";
+            var resourceString = Resources.ResourceManager.GetString("ComplianceMessage");
+            var responseMsg = string.Format(resourceString, msg, user.GivenName, manager.GivenName);
             // Construct the message to post to conversation
             Activity newMessage = new Activity()
             {
-                Text = string.Format(CultureInfo.InvariantCulture, Resources.ResourceManager.GetString("ComplianceMessage"), user.GivenName, manager.GivenName),
+                Text = responseMsg,
                 Type = ActivityTypes.Message,
                 Conversation = new ConversationAccount
                 {

@@ -43,14 +43,14 @@ namespace Actiance.Dialogs
                 Storage.user = await APIService.GetUser(contextName);
                 Storage.manager = await APIService.GetManager(Storage.user.Id);
 
-                await MontiorService.monitorMessages();
+                await MontiorService.MonitorMessages();
 
                 //new Thread(() =>
                 //{
                 //    Thread.CurrentThread.IsBackground = true;
                 //    try
                 //    {
-                //        await MontiorService.monitorMessages();
+                //await MontiorService.MonitorMessages();
                 //    }
                 //    catch (Exception e)
                 //    {
