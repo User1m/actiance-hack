@@ -20,10 +20,10 @@ namespace Actiance
             builder.Update(Conversation.Container);
 
             GlobalConfiguration.Configure(WebApiConfig.Register);
-            if (AuthController.NeedsOauthToken())
+            /*if (AuthController.NeedsOauthToken())
             {
                 AuthController.GetAdminConsent();
-            }
+            }*/
             //else
             //{
             //    APIService.GetUsers();

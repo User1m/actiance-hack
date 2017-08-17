@@ -91,7 +91,6 @@ namespace Actiance.Dialogs
             try
             {
                 string optionSelected = await result;
-
                 switch (optionSelected)
                 {
                     case AskQestion:
