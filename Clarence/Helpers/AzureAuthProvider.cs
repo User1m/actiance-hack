@@ -18,6 +18,8 @@ namespace Actiance.Helpers
             AuthenticationContext authContext = new AuthenticationContext($"{AuthController.aadInstance}/{AuthController.authTenant}/oauth2/v2.0/token");
             ClientCredential creds = new ClientCredential(AuthController.clientId, AuthController.clientSecret);
             AuthenticationResult authResult = await authContext.AcquireTokenAsync($"{AuthController.msGraph}/", creds);
+            //sets oauth token in case you need to make manual REST calls
+            AuthController.oauthToken = authResult.AccessToken;
             request.Headers.Add("Authorization", $"Bearer {authResult.AccessToken}");
         }
     }

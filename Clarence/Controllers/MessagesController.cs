@@ -95,7 +95,7 @@ namespace Actiance
             Microsoft.Graph.User manager = Storage.manager;
             if (Storage.user.Id != user.ObjectId)
             {
-                manager = await APIService.GetManager(user.ObjectId);
+                manager = await APIService.GetUserManager(user.ObjectId);
             }
             msg = (string.IsNullOrEmpty(msg)) ? msg : $"\"{msg}\"";
             var resourceString = Resources.ResourceManager.GetString("ComplianceMessage");

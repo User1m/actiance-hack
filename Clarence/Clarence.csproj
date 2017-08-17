@@ -145,13 +145,11 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\SimpleDLP.cs" />
-    <Compile Include="Models\Notification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Models\TokenResponse.cs" />
-    <Compile Include="Models\TokenError.cs" />
     <Compile Include="Dialogs\FlagIssueDialog.cs" />
     <Compile Include="Services\APIService.cs" />
     <Compile Include="App_LocalResources\Resources.Designer.cs">
@@ -162,10 +160,9 @@
     <Compile Include="Helpers\Middleware.cs" />
     <Compile Include="Dialogs\SupportDialog.cs" />
     <Compile Include="Dialogs\MainDialog.cs" />
-    <Compile Include="Dialogs\IAppDialog.cs" />
     <Compile Include="Services\MontiorService.cs" />
-    <Compile Include="Models\MessageDeltaQueryResponse.cs" />
     <Compile Include="Helpers\AzureAuthProvider.cs" />
+    <Compile Include="Interfaces\IAppDialog.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
@@ -180,6 +177,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Interfaces\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="App_LocalResources\Resources.resx">

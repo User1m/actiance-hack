@@ -34,7 +34,7 @@ namespace Actiance.Controllers
 
 
         //AUTH CREDENTIALS
-        private static string oauthToken = "";
+        public static string oauthToken { get; set; } = string.Empty;
         static IEnumerable<KeyValuePair<string, string>> postData = new Dictionary<string, string> {
             { "client_id", clientId },
             { "scope", $"{msGraph}/{scope}" },

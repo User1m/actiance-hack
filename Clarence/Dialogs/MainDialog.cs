@@ -40,23 +40,23 @@ namespace Actiance.Dialogs
             if (Storage.user == null)
             {
                 //call API services
-                Storage.user = await APIService.GetUser(contextName);
-                Storage.manager = await APIService.GetManager(Storage.user.Id);
+                Storage.user = await APIService.GetUserProfile(contextName);
+                Storage.manager = await APIService.GetUserManager(Storage.user.Id);
 
-                await MontiorService.MonitorMessages();
-
-                //new Thread(() =>
-                //{
-                //    Thread.CurrentThread.IsBackground = true;
-                //    try
-                //    {
-                //await MontiorService.MonitorMessages();
-                //    }
-                //    catch (Exception e)
-                //    {
-                //        Console.WriteLine($"ERROR IN BACKGROUND THREAD: {e.Message}");
-                //    }
-                //}).Start();
+                //start monitoring service on background thread
+                //await MontiorService.IngestMessagesForUser(Storage.user.Id);
+                new Thread(async () =>
+                {
+                    Thread.CurrentThread.IsBackground = true;
+                    try
+                    {
+                        await MontiorService.IngestMessagesForUser(Storage.user.Id);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine($"ERROR IN BACKGROUND THREAD: {e.Message}");
+                    }
+                }).Start();
             }
 
             var message = await result;

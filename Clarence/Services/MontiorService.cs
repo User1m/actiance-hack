@@ -13,32 +13,28 @@ namespace Actiance.Services
 {
     public static class MontiorService
     {
-        public async static Task<bool> MonitorMessages()
+        public async static Task<bool> IngestMessagesForUser(string userId)
         {
-            var messages = await APIService.GetMessageDeltasForUser(Storage.user.Id);
+            List<Message> userMessages = await APIService.GetMessageDeltasForUser(userId);
+            Storage.userMessages.Add(userId, userMessages);
+            var tasks = new List<Task>();
 
-            foreach (KeyValuePair<string, List<Message>> entry in messages)
+            foreach (Message entry in userMessages)
             {
-                var tasks = new List<Task>();
-                string currentUserId = entry.Key;
-                entry.Value.ForEach(
-                async (x) =>
+                if (entry.BodyPreview.Contains(Resources.ResourceManager.GetString("DLPPhrase")))
                 {
-                    if (x.BodyPreview.Contains(Resources.ResourceManager.GetString("DLPPhrase")))
+                    Console.WriteLine("here");
+                    var members = await MessagesController.GetConverationMembers();
+                    foreach (var member in members)
                     {
-                        Console.WriteLine("here");
-                        var members = await MessagesController.GetConverationMembers();
-                        foreach (var member in members)
+                        if (member.ObjectId == userId)
                         {
-                            if (member.ObjectId == currentUserId)
-                            {
-                                //message user once
-                                tasks.Add(SendComplianceMsgAsync(member, x.BodyPreview));
-                                break;
-                            }
+                            //message user once
+                            tasks.Add(SendComplianceMsgAsync(member, entry.BodyPreview));
+                            break;
                         }
                     }
-                });
+                }
                 await Task.WhenAll(tasks);
             }
             return true;
