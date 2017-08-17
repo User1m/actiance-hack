@@ -166,7 +166,6 @@
     <Compile Include="Services\MontiorService.cs" />
     <Compile Include="Models\MessageDeltaQueryResponse.cs" />
     <Compile Include="Helpers\AzureAuthProvider.cs" />
-    <Compile Include="Helpers\TeamChat.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

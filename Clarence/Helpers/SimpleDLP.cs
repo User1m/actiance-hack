@@ -5,55 +5,25 @@ using System.Text;
 
 namespace Actiance.Helpers
 {
-    class SimpleDLP
+    static class SimpleDLP
     {
-        private List<String> dlpKeywords;
-        private List<Regex> regExDLPs;
+        private static List<String> dlpKeywords = new List<string>()
+        {
+            "share",
+            "short sell",
+            "illegal"
+        };
+
         private static string ssnRegExStr = "[0-9]{3}-[0-9]{2}-[0-9]{4}";
         private static string creditCardRegExStr = "([0-9]{4}[- ]{0,1}){3,3}[0-9]{4}";
-        public SimpleDLP(List<String> keywords)
+
+        private static List<Regex> regExDLPs = new List<Regex>()
         {
-            dlpKeywords = new List<string>();
-            regExDLPs = new List<Regex>();
+            new Regex(ssnRegExStr, RegexOptions.Compiled),
+            new Regex(creditCardRegExStr, RegexOptions.Compiled)
+        };
 
-            foreach(string keyword in keywords)
-            {
-                if (!String.IsNullOrEmpty(keyword)) {
-                    string keywordInLower = keyword.ToLower();
-                    switch(keywordInLower)
-                    {
-                        case "ssn":
-                            try
-                            {
-                                Regex re = new Regex(ssnRegExStr, RegexOptions.Compiled);
-                                regExDLPs.Add(re);
-                            } catch(Exception e)
-                            {
-                                Console.WriteLine("Error initializing ssn regular exp: " + e.Message);
-
-                            }
-                            break;
-                            
-                        case "creditcard":
-                            try
-                            {
-                                Regex re = new Regex(creditCardRegExStr, RegexOptions.Compiled);
-                                regExDLPs.Add(re);
-                            }
-                            catch (Exception e)
-                            {
-                                Console.WriteLine("Error initializing credit card regular exp: " + e.Message);
-                            }
-                            break;
-                        default:
-                            dlpKeywords.Add(keywordInLower);
-                            break;
-                    }
-                }
-            }
-        }
-
-        public bool containsRestrictedPhrases(string msg)
+        public static bool containsRestrictedPhrases(string msg)
         {
             bool retVal = false;
             try
