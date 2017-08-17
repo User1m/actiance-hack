@@ -130,5 +130,17 @@ namespace Actiance.App_LocalResources {
                 return ResourceManager.GetString("ComplianceMessage", resourceCulture);
             }
         }
+        
+        internal static string EmailSubject {
+            get {
+                return ResourceManager.GetString("EmailSubject", resourceCulture);
+            }
+        }
+        
+        internal static string EmailContent {
+            get {
+                return ResourceManager.GetString("EmailContent", resourceCulture);
+            }
+        }
     }
 }

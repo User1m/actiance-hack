@@ -12,10 +12,10 @@ namespace Actiance.Services
     public static class APIService
     {
 
-        private static string graphv1Endpoint = $"{AuthController.msGraph}/v1.0";
-        private static string graphBetaEndpoint = $"{AuthController.msGraph}/beta";
+        public static string graphv1Endpoint = $"{AuthController.msGraph}/v1.0";
+        public static string graphBetaEndpoint = $"{AuthController.msGraph}/beta";
 
-        private static GraphServiceClient graphBetaClient = new GraphServiceClient(
+        public static GraphServiceClient graphBetaClient = new GraphServiceClient(
             graphBetaEndpoint, new AzureAuthenticationProvider()
                //new DelegateAuthenticationProvider(
                //async (requestMessage) =>
@@ -25,7 +25,7 @@ namespace Actiance.Services
                //    return Task.FromResult(0);
                //})
                );
-        private static GraphServiceClient graphv1Client = new GraphServiceClient(
+        public static GraphServiceClient graphv1Client = new GraphServiceClient(
             graphv1Endpoint, new AzureAuthenticationProvider()
         );
 

@@ -9,6 +9,9 @@ using Actiance.Services;
 using Microsoft.Bot.Connector.Teams;
 using Microsoft.Bot.Connector.Teams.Models;
 using Actiance.App_LocalResources;
+using Microsoft.Graph;
+using System.Collections.Generic;
+using Microsoft.IdentityModel.Clients.ActiveDirectory;
 
 namespace Actiance
 {
@@ -36,7 +39,7 @@ namespace Actiance
 
                 else
                 {
-                    await Conversation.SendAsync(activity, () => new MainDialog());
+                    await Microsoft.Bot.Builder.Dialogs.Conversation.SendAsync(activity, () => new MainDialog());
                 }
             }
             else
@@ -80,11 +83,35 @@ namespace Actiance
 
         public static async Task<TeamsChannelAccount[]> GetConverationMembers()
         {
-            // Fetch the members in the current conversation
+            /// Fetch the members in the current conversation
             var convoId = Storage.activity.Conversation.Id;
             var tenantId = Storage.activity.GetTenantId();
             var members = await connector.Conversations.GetTeamsConversationMembersAsync(convoId, tenantId);
             return members;
+        }
+
+        public static async Task EmailManager(string userFullName, string flaggedMsg, User manager)
+        {
+            ///email manager
+            Message email = new Message
+            {
+                Body = new ItemBody
+                {
+                    Content = string.Format(Resources.ResourceManager.GetString("EmailContent"), userFullName, flaggedMsg),
+                    ContentType = BodyType.Text,
+                },
+                Subject = Resources.ResourceManager.GetString("EmailSubject"),
+                ToRecipients = new List<Recipient> {
+                    new Recipient{
+                        EmailAddress = new EmailAddress{
+                            Address = manager.Mail
+                        }
+                    }
+                }
+            };
+
+            // Send the message.
+            await APIService.graphv1Client.Users[manager.Id].SendMail(email, true).Request().PostAsync();
         }
 
         public static async Task MessageUserAndManager(TeamsChannelAccount user, string msg = "")
@@ -110,6 +137,8 @@ namespace Actiance
                     Id = response.Id
                 },
             };
+
+            await EmailManager($"{user.GivenName} {user.Surname}", msg, manager);
 
             // Post the message to chat conversation with user
             await connector.Conversations.SendToConversationAsync(newMessage, response.Id);

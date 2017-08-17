@@ -30,14 +30,16 @@ namespace Actiance.Services
                     {
                         if (member.ObjectId == userId)
                         {
-                            //message user once
                             tasks.Add(SendComplianceMsgAsync(member, entry.BodyPreview));
                             break;
                         }
                     }
                 }
-                await Task.WhenAll(tasks);
+
+                ///message user once
+                if (tasks.Count > 0) { break; }
             }
+            await Task.WhenAll(tasks);
             return true;
         }
 
