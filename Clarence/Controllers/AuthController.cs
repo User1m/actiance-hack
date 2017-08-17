@@ -19,13 +19,13 @@ namespace Actiance.Controllers
     public class AuthController : ApiController
     {
 
-        private static string clientId = ConfigurationManager.AppSettings["ida:ClientId"];
-        private static string clientSecret = ConfigurationManager.AppSettings["ida:ClientSecret"];
-        private static string aadInstance = ConfigurationManager.AppSettings["ida:AADInstance"];
-        private static string tenant = ConfigurationManager.AppSettings["ida:Tenant"];
+        public static string clientId = ConfigurationManager.AppSettings["ida:ClientId"];
+        public static string clientSecret = ConfigurationManager.AppSettings["ida:ClientSecret"];
+        public static string aadInstance = ConfigurationManager.AppSettings["ida:AADInstance"];
+        public static string tenant = ConfigurationManager.AppSettings["ida:Tenant"];
         public static string msGraph = ConfigurationManager.AppSettings["ida:MSGraph"];
         private static string redirectUri = ConfigurationManager.AppSettings["ida:RedirectUri"];
-        private static string authTenant = ConfigurationManager.AppSettings["ida:AuthTenant"];
+        public static string authTenant = ConfigurationManager.AppSettings["ida:AuthTenant"];
         private static string scope = ConfigurationManager.AppSettings["ida:Scope"];
         //private static string metadata = string.Format("{0}/{1}/federationmetadata/2007-06/federationmetadata.xml", aadInstance, tenant);
         static string authority = $"{aadInstance}/{tenant}/adminconsent?client_id={clientId}&state=auth&redirect_uri={redirectUri}";
@@ -85,7 +85,7 @@ namespace Actiance.Controllers
         /// </summary>
         /// <returns></returns>
         public static async Task PostForOauthToken()
-        { 
+        {
             TokenResponse tokenResponse = await APIService.PostTo<TokenResponse>($"{aadInstance}/{authTenant}/oauth2/v2.0/token", postData);
             oauthToken = tokenResponse.access_token;
         }

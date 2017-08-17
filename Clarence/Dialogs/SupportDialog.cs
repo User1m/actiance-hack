@@ -16,9 +16,10 @@ namespace Actiance.Dialogs
             context.Wait(this.MessageReceivedAsync);
         }
 
-        public virtual async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
+        public virtual Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
         {
             context.Done(true);
+            return Task.CompletedTask;
         }
     }
 }

@@ -70,5 +70,65 @@ namespace Actiance.App_LocalResources {
                 return ResourceManager.GetString("HelpMessage", resourceCulture);
             }
         }
+        
+        internal static string Welcomed {
+            get {
+                return ResourceManager.GetString("Welcomed", resourceCulture);
+            }
+        }
+        
+        internal static string InvalidOption {
+            get {
+                return ResourceManager.GetString("InvalidOption", resourceCulture);
+            }
+        }
+        
+        internal static string OptionError {
+            get {
+                return ResourceManager.GetString("OptionError", resourceCulture);
+            }
+        }
+        
+        internal static string FlagMain {
+            get {
+                return ResourceManager.GetString("FlagMain", resourceCulture);
+            }
+        }
+        
+        internal static string FlagError {
+            get {
+                return ResourceManager.GetString("FlagError", resourceCulture);
+            }
+        }
+        
+        internal static string AskMain {
+            get {
+                return ResourceManager.GetString("AskMain", resourceCulture);
+            }
+        }
+        
+        internal static string AskError {
+            get {
+                return ResourceManager.GetString("AskError", resourceCulture);
+            }
+        }
+        
+        internal static string AskSSN {
+            get {
+                return ResourceManager.GetString("AskSSN", resourceCulture);
+            }
+        }
+        
+        internal static string DLPPhrase {
+            get {
+                return ResourceManager.GetString("DLPPhrase", resourceCulture);
+            }
+        }
+        
+        internal static string ComplianceMessage {
+            get {
+                return ResourceManager.GetString("ComplianceMessage", resourceCulture);
+            }
+        }
     }
 }

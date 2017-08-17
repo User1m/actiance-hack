@@ -2,14 +2,9 @@
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
-using System.Configuration;
-using System.Web.Http;
 using System.Collections.Generic;
-using System.Web.UI.WebControls;
 using Actiance.App_LocalResources;
 using System.Globalization;
-using System.Resources;
-using System.Reflection;
 using Actiance.Services;
 using Actiance.Helpers;
 using System.Threading;
@@ -28,6 +23,8 @@ namespace Actiance.Dialogs
         private const string AskCMD = "ASK:";
         private const string FlagCMD = "FLAG:";
         private const string GratitudeCMD = "THANKS:";
+        private const string DebugCMD = "DEBUG:";
+
 
 
         public Task StartAsync(IDialogContext context)
@@ -38,12 +35,28 @@ namespace Actiance.Dialogs
 
         public virtual async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
         {
+            Storage.context = context;
             string contextName = context.Activity.From.Name;
             if (Storage.user == null)
             {
-                //get user profie
-                await APIService.GetUser(contextName);
-                await APIService.GetManager(contextName);
+                //call API services
+                Storage.user = await APIService.GetUser(contextName);
+                Storage.manager = await APIService.GetManager(Storage.user.Id);
+
+                await MontiorService.monitorMessages();
+
+                //new Thread(() =>
+                //{
+                //    Thread.CurrentThread.IsBackground = true;
+                //    try
+                //    {
+                //        await MontiorService.monitorMessages();
+                //    }
+                //    catch (Exception e)
+                //    {
+                //        Console.WriteLine($"ERROR IN BACKGROUND THREAD: {e.Message}");
+                //    }
+                //}).Start();
             }
 
             var message = await result;
@@ -67,6 +80,11 @@ namespace Actiance.Dialogs
             {
                 cmd = GratitudeCMD;
             }
+            else if (msg.Contains("debug") || msg.Equals("dev"))
+            {
+                cmd = DebugCMD;
+            }
+
 
             switch (cmd)
             {
@@ -80,7 +98,10 @@ namespace Actiance.Dialogs
                     await context.Forward(new FlagIssueDialog(), this.ResumeAfterDoneDialog, message, CancellationToken.None);
                     break;
                 case GratitudeCMD:
-                    await TypeAndMessage(context, "You are welcomed!");
+                    await TypeAndMessage(context, Resources.ResourceManager.GetString("Welcomed"));
+                    break;
+                case DebugCMD:
+                    await TypeAndMessage(context, $"{Storage.user.GivenName}'s Manager is {Storage.manager.GivenName} at {DateTime.Now.ToString("yyyy-MM-ddThh:mm:ssZ")}");
                     break;
                 default:
                     this.ShowOptions(context);
@@ -93,7 +114,7 @@ namespace Actiance.Dialogs
         {
             string userName = (Storage.user == null ? context.Activity.From.Name : Storage.user.GivenName);
             string welcomeMsg = string.Format(CultureInfo.InvariantCulture, Resources.ResourceManager.GetString("Welcome"), userName);
-            PromptDialog.Choice(context, this.OnOptionSelected, new List<string>() { AskQestion, FlagContent }, welcomeMsg, "You didn't choose a valid option", 1);
+            PromptDialog.Choice(context, this.OnOptionSelected, new List<string>() { AskQestion, FlagContent }, welcomeMsg, Resources.ResourceManager.GetString("InvalidOption"), 1);
         }
 
         private async Task OnOptionSelected(IDialogContext context, IAwaitable<string> result)
@@ -115,7 +136,7 @@ namespace Actiance.Dialogs
             catch (TooManyAttemptsException ex)
             {
                 Console.WriteLine(ex.Message);
-                await TypeAndMessage(context, $"Were you looking to do something else? Please Try Again.");
+                await TypeAndMessage(context, string.Format(Resources.ResourceManager.GetString("OptionError"), (Storage.user == null ? context.Activity.From.Name : Storage.user.GivenName)));
                 context.Wait(this.MessageReceivedAsync);
             }
         }
@@ -145,7 +166,7 @@ namespace Actiance.Dialogs
 
         public async Task TypeAndMessage(IDialogContext context, string response)
         {
-            await MessagesController.SendTyping(context);
+            await MessagesController.SendTyping();
             await context.PostAsync(response);
         }
 

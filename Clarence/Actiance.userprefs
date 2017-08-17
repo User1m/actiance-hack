@@ -2,26 +2,38 @@
   <MonoDevelop.Ide.ItemProperties.Clarence PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Services/APIService.cs">
     <Files>
-      <File FileName="Controllers/MessagesController.cs" Line="62" Column="69" />
-      <File FileName="Dialogs/MainDialog.cs" Line="46" Column="39" />
-      <File FileName="Dialogs/AskQuestionsDialog.cs" Line="70" Column="47" />
-      <File FileName="Dialogs/FlagIssueDialog.cs" Line="63" Column="7" />
-      <File FileName="Dialogs/SupportDialog.cs" Line="16" Column="1" />
-      <File FileName="App_LocalResources/Resources.resx" Line="51" Column="8" />
-      <File FileName="Dialogs/NotificationDialog.cs" Line="1" Column="1" />
-      <File FileName="Dialogs/IAppDialog.cs" Line="9" Column="9" />
-      <File FileName="Services/APIService.cs" Line="58" Column="34" />
+      <File FileName="Controllers/MessagesController.cs" Line="101" Column="14" />
+      <File FileName="Dialogs/MainDialog.cs" Line="50" Column="56" />
+      <File FileName="Services/APIService.cs" Line="96" Column="92" />
+      <File FileName="Services/MontiorService.cs" Line="18" Column="1" />
+      <File FileName="Controllers/AuthController.cs" Line="24" Column="15" />
     </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="Actiance" expanded="True">
+            <Node name="Clarence" expanded="True">
+              <Node name="App_LocalResources" expanded="True" />
+              <Node name="App_Start" expanded="True" />
+              <Node name="Controllers" expanded="True" />
+              <Node name="Dialogs" expanded="True" />
+              <Node name="Helpers" expanded="True" />
+              <Node name="Models" expanded="True" />
+              <Node name="Services" expanded="True">
+                <Node name="APIService.cs" selected="True" />
+              </Node>
+              <Node name="Global.asax" expanded="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
-      <Breakpoint enabled="false" file="/Users/claudius/Documents/workspace/Hackfests/Actiance/Clarence/Services/APIService.cs" relfile="Services/APIService.cs" line="27" column="1" />
-      <Breakpoint enabled="false" file="/Users/claudius/Documents/workspace/Hackfests/Actiance/Clarence/Controllers/AuthController.cs" relfile="Controllers/AuthController.cs" line="89" column="1" />
-      <Breakpoint enabled="false" file="/Users/claudius/Documents/workspace/Hackfests/Actiance/Clarence/Dialogs/AskQuestionsDialog.cs" relfile="Dialogs/AskQuestionsDialog.cs" line="35" column="1" />
-      <Breakpoint enabled="false" file="/Users/claudius/Documents/workspace/Hackfests/Actiance/Clarence/Dialogs/AskQuestionsDialog.cs" relfile="Dialogs/AskQuestionsDialog.cs" line="26" column="1" />
-      <Breakpoint enabled="false" file="/Users/claudius/Documents/workspace/Hackfests/Actiance/Clarence/Dialogs/MainDialog.cs" relfile="Dialogs/MainDialog.cs" line="71" column="1" />
-      <Breakpoint enabled="false" file="/Users/claudius/Documents/workspace/Hackfests/Actiance/Clarence/Dialogs/MainDialog.cs" relfile="Dialogs/MainDialog.cs" line="54" column="1" />
+      <Breakpoint file="/Users/claudius/Documents/workspace/Hackfests/Actiance/Clarence/Services/MontiorService.cs" relfile="Services/MontiorService.cs" line="18" column="1" />
+      <Breakpoint file="/Users/claudius/Documents/workspace/Hackfests/Actiance/Clarence/Services/APIService.cs" relfile="Services/APIService.cs" line="113" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />

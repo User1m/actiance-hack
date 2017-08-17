@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
 using Actiance.Interface;
+using Actiance.App_LocalResources;
 
 namespace Actiance.Dialogs
 {
@@ -13,7 +14,7 @@ namespace Actiance.Dialogs
         {
             if (context.Activity.AsMessageActivity().Text.Equals("Flag something"))
             {
-                await TypeAndMessage(context, "What non-compliance related message would you like to flag?");
+                await TypeAndMessage(context, Resources.ResourceManager.GetString("FlagMain"));
             }
             context.Wait(this.MessageReceivedAsync);
         }
@@ -35,11 +36,11 @@ namespace Actiance.Dialogs
             if (msg.Equals("Flag something"))
             {
                 continueDialog = true;
-                response = "What non-compliance related message would you like to flag?";
+                response = Resources.ResourceManager.GetString("FlagMain");
             }
             else if (!msg.Contains("flag:"))
             {
-                response = "Please phrase you question in this way - flag: <Issue>";
+                response = Resources.ResourceManager.GetString("FlagError");
             }
             else
             {
@@ -62,7 +63,7 @@ namespace Actiance.Dialogs
 
         public async Task TypeAndMessage(IDialogContext context, string response)
         {
-            await MessagesController.SendTyping(context);
+            await MessagesController.SendTyping();
             await context.PostAsync(response);
         }
     }

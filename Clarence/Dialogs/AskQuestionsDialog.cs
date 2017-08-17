@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
 using Actiance.Interface;
+using Actiance.App_LocalResources;
 
 namespace Actiance.Dialogs
 {
@@ -13,7 +14,7 @@ namespace Actiance.Dialogs
         {
             if (context.Activity.AsMessageActivity().Text.Equals("Ask a question"))
             {
-                await TypeAndMessage(context, "What compliance related question would you like to ask?");
+                await TypeAndMessage(context, Resources.ResourceManager.GetString("AskMain"));
             }
 
             context.Wait(this.MessageReceivedAsync);
@@ -37,16 +38,16 @@ namespace Actiance.Dialogs
             if (msg.Equals("Ask a question"))
             {
                 continueDialog = true;
-                response = "What compliance related question would you like to ask?";
+                response = Resources.ResourceManager.GetString("AskMain");
             }
             else if (!msg.Contains("ask:"))
             {
                 continueDialog = true;
-                response = "Please phrase you question in this way - ask: <Question>";
+                response = Resources.ResourceManager.GetString("AskError");
             }
             else if (msg.Contains("ssn"))
             {
-                response = "NO! It's never wise to share Peronally Identifiable Information (PII) such as you SSN in public domain.";
+                response = Resources.ResourceManager.GetString("AskSSN");
             }
             else
             {
@@ -66,7 +67,7 @@ namespace Actiance.Dialogs
         }
         public async Task TypeAndMessage(IDialogContext context, string response)
         {
-            await MessagesController.SendTyping(context);
+            await MessagesController.SendTyping();
             await context.PostAsync(response);
         }
     }
