@@ -12,7 +12,7 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
-	<data name="Welcome">
+	<data name="WelcomeMain">
 Hi {0}, I'm Clarence, the Actiance Compliance bot.😊 
 I can help you and your team operate in a compliant manner. 
 Just mention me in your channel (by typing `@Clarence` ), followed by a question. 
@@ -22,6 +22,9 @@ For example:
 
 What would you like to do?
 	</data>
+	<data name="Welcome">
+Hi {0}, what would you like to do?
+    </data>
 	<data name="Help">
 	   For more info, just say "@Clarence help".
 	</data>
@@ -35,7 +38,7 @@ Hi here are things I can do:
 3. Answer compliance questions
     Example `@Clarence question: Can I share my SSN?`
 
-Hope that helps!
+What would you like to do?
     </data>
 	<!--<data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
 	<data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">

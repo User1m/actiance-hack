@@ -3,6 +3,7 @@ using Newtonsoft.Json.Serialization;
 using System.Web.Http;
 using System.Net.Http.Headers;
 using System.Linq;
+using System.Web.Routing;
 
 namespace Actiance
 {
@@ -21,6 +22,12 @@ namespace Actiance
             };
 
             config.MapHttpAttributeRoutes();
+
+            //config.Routes.MapHttpRoute(
+            //    name: "DefaultApi",
+            //    routeTemplate: "api/{controller}/{action}",
+            //    defaults: new { action = RouteParameter.Optional }
+            //);
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",

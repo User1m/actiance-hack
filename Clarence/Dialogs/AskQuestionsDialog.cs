@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
 using System.Collections.Generic;
+using Actiance.Helpers;
 
 namespace Actiance.Dialogs
 {
@@ -15,6 +16,7 @@ namespace Actiance.Dialogs
             {
                 await context.PostAsync("What compliance related question would you like to ask?");
             }
+
             context.Wait(this.MessageReceivedAsync);
         }
 
@@ -52,14 +54,16 @@ namespace Actiance.Dialogs
                 response = responses[new Random().Next(0, responses.Length - 1)];
             }
 
+            await MessagesController.SendTyping(context);
             await context.PostAsync(response);
+
             if (continueDialog)
             {
                 context.Wait(this.MessageReceivedAsync);
             }
             else
             {
-                context.Done<object>(null);
+                context.Done(true);
             }
 
         }

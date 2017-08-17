@@ -18,48 +18,63 @@ namespace Actiance.Dialogs
 {
 
     [Serializable]
-    public class RootDialog : IDialog<object>
+    public class MainDialog : IDialog<object>
     {
         private const string AskQestion = "Ask a question";
         private const string FlagContent = "Flag something";
 
+        private const string HelpCMD = "HELP:";
+        private const string AskCMD = "ASK:";
+        private const string FlagCMD = "FLAG:";
+
         public Task StartAsync(IDialogContext context)
         {
-            context.Wait(MessageReceivedAsync);
+            context.Wait(this.MessageReceivedAsync);
             return Task.CompletedTask;
         }
 
-        private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
+        public virtual async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
         {
             string contextName = context.Activity.From.Name;
-            if (Storage.user != null)
-            {
-                //get user profie
-                await APIService.GetUser(contextName);
-                await APIService.GetManager(contextName);
-            }
-
+            //if (Storage.user != null)
+            //{
+            //    //get user profie
+            //    await APIService.GetUser(contextName);
+            //    await APIService.GetManager(contextName);
+            //}
 
             var message = await result;
 
             string msg = message.Text.ToLower();
+            string cmd = null;
 
             if (msg.Contains("help") || msg.Contains("support") || msg.Contains("problem"))
             {
-                context.Call(new SupportDialog(), this.ResumeAfterSupportDialog);
+                cmd = HelpCMD;
             }
-            else if (msg.Contains("ask") || msg.Contains("question"))
+            else if (msg.Contains("ask") || msg.Contains("question") || msg.Contains("ask:") || msg.Contains("question:"))
             {
-                context.Call(new AskQuestionsDialog(), this.ResumeAfterOptionDialog);
+                cmd = AskCMD;
             }
-            else if (msg.Equals("hello") || msg.Contains("hi"))
+            else if (msg.Contains("flag") || msg.Contains("flag:") || msg.Contains("item"))
             {
-                this.ShowOptions(context);
+                cmd = FlagCMD;
             }
-            else
+
+            switch (cmd)
             {
-                await context.PostAsync("Say *help* or ask: *<question>* or flag: *<issue>*");
-                context.Wait(MessageReceivedAsync);
+                case HelpCMD:
+                    await context.Forward(new SupportDialog(), this.ResumeAfterDoneDialog, message, CancellationToken.None);
+                    break;
+                case AskCMD:
+                    await context.Forward(new AskQuestionsDialog(), this.ResumeAfterDoneDialog, message, CancellationToken.None);
+                    break;
+                case FlagCMD:
+                    await context.Forward(new FlagIssueDialog(), this.ResumeAfterDoneDialog, message, CancellationToken.None);
+                    break;
+                default:
+                    this.ShowOptions(context);
+                    break;
             }
 
         }
@@ -68,7 +83,7 @@ namespace Actiance.Dialogs
         {
             string userName = (Storage.user == null ? context.Activity.From.Name : Storage.user.GivenName);
             string welcomeMsg = string.Format(CultureInfo.InvariantCulture, Resources.ResourceManager.GetString("Welcome"), userName);
-            PromptDialog.Choice(context, this.OnOptionSelected, new List<string>() { AskQestion, FlagContent }, welcomeMsg, "Not a valid option", 3);
+            PromptDialog.Choice(context, this.OnOptionSelected, new List<string>() { AskQestion, FlagContent }, welcomeMsg, "Not a valid option", 1);
         }
 
         private async Task OnOptionSelected(IDialogContext context, IAwaitable<string> result)
@@ -80,19 +95,18 @@ namespace Actiance.Dialogs
                 switch (optionSelected)
                 {
                     case AskQestion:
-                        context.Call(new AskQuestionsDialog(), this.ResumeAfterOptionDialog);
+                        await context.Forward(new AskQuestionsDialog(), this.ResumeAfterDoneDialog, optionSelected, CancellationToken.None);
                         break;
 
                     case FlagContent:
-                        context.Call(new FlagIssueDialog(), this.ResumeAfterOptionDialog);
+                        await context.Forward(new FlagIssueDialog(), this.ResumeAfterDoneDialog, optionSelected, CancellationToken.None);
                         break;
                 }
             }
             catch (TooManyAttemptsException ex)
             {
                 Console.WriteLine(ex.Message);
-                await context.PostAsync($"Ooops! Too many attemps :(. But don't worry, I'm handling that exception and you can try again!");
-
+                await context.PostAsync($"Were you looking to do something else? Please Try Again.");
                 context.Wait(this.MessageReceivedAsync);
             }
         }
@@ -102,11 +116,13 @@ namespace Actiance.Dialogs
             try
             {
                 //var message = await result;
-                await context.PostAsync($"Thanks for contacting me");
+                //await context.PostAsync($"Thanks for contacting me");
+
             }
             catch (Exception ex)
             {
-                await context.PostAsync($"Failed with message: {ex.Message}");
+                await context.PostAsync($"Failed with message:\n-----------\n{ex.Message}\n-----------");
+
             }
             finally
             {
@@ -114,10 +130,10 @@ namespace Actiance.Dialogs
             }
         }
 
-        private async Task ResumeAfterSupportDialog(IDialogContext context, IAwaitable<object> result)
+        private Task ResumeAfterDoneDialog(IDialogContext context, IAwaitable<object> result)
         {
-            await context.PostAsync($"What would you like to do?");
-            context.Done<object>(null);
+            context.Done(true);
+            return Task.CompletedTask;
         }
 
 

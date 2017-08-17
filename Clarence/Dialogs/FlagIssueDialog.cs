@@ -17,16 +17,15 @@ namespace Actiance.Dialogs
             context.Wait(this.MessageReceivedAsync);
         }
 
-        private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
+        public virtual async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
         {
-
             var message = await result;
 
             string msg = message.Text.ToLower();
             string response = "";
             string[] responses = {
                 "Thanks it has been flagged!",
-                "It shall be done",
+                "It shall be done. Thank you.",
                 "Your wish is my commmand"
             };
 
@@ -46,14 +45,16 @@ namespace Actiance.Dialogs
                 response = responses[new Random().Next(0, responses.Length - 1)];
             }
 
+            await MessagesController.SendTyping(context);
             await context.PostAsync(response);
+
             if (continueDialog)
             {
                 context.Wait(this.MessageReceivedAsync);
             }
             else
             {
-                context.Done<object>(null);
+                context.Done(true);
             }
         }
     }

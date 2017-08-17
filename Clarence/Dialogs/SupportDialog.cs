@@ -13,15 +13,12 @@ namespace Actiance.Dialogs
         public async Task StartAsync(IDialogContext context)
         {
             await context.PostAsync(Resources.ResourceManager.GetString("HelpMessage"));
-            context.Done<object>(null);
-            //context.Wait(this.MessageReceivedAsync);
+            context.Wait(this.MessageReceivedAsync);
         }
 
-        //public virtual async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
-        //{
-        //    var message = await result;
-        //    await context.PostAsync(Resources.ResourceManager.GetString("HelpMessage"));
-        //    context.Done<object>(null);
-        //}
+        public virtual async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
+        {
+            context.Done(true);
+        }
     }
 }

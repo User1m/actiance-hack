@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Graph;
+using Microsoft.Bot.Connector;
 
 namespace Actiance.Helpers
 {
@@ -9,5 +10,6 @@ namespace Actiance.Helpers
         public static List<User> userStore { get; set; } = null;
         public static User manager { get; set; } = null;
         public static User user { get; set; } = null;
+        public static Activity activity { get; set; }
     }
 }

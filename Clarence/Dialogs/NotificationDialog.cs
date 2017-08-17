@@ -17,13 +17,13 @@ namespace Actiance.Dialogs
             return Task.CompletedTask;
         }
 
-        private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<object> result)
+        public virtual async Task MessageReceivedAsync(IDialogContext context, IAwaitable<object> result)
         {
             var activity = await result as Activity;
             var notification = activity.Value as Notification;
 
             var connector = new ConnectorClient(new Uri(ConfigurationManager.AppSettings["ServiceUrl"]));
-            
+
             IMessageActivity message = Activity.CreateMessageActivity();
             message.From = new ChannelAccount(ConfigurationManager.AppSettings["BotId"], "Clarence");
             message.Conversation = new ConversationAccount(true, "conversation");
@@ -31,7 +31,7 @@ namespace Actiance.Dialogs
 
             message.Locale = "en-En";
             message.Text = $"You made a change to the file {notification.Resource}";
-            
+
             connector.Conversations.SendToConversation((Activity)message);
 
             context.Wait(MessageReceivedAsync);

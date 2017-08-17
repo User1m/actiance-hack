@@ -137,16 +137,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\GraphController.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
     <Compile Include="Dialogs\NotificationDialog.cs" />
-    <Compile Include="Dialogs\RootDialog.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Notification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\SubscriptionService.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Controllers\AuthController.cs" />
@@ -161,6 +158,7 @@
     <Compile Include="Dialogs\AskQuestionsDialog.cs" />
     <Compile Include="Helpers\Middleware.cs" />
     <Compile Include="Dialogs\SupportDialog.cs" />
+    <Compile Include="Dialogs\MainDialog.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

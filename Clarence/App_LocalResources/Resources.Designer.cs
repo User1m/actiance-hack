@@ -47,6 +47,12 @@ namespace Actiance.App_LocalResources {
             }
         }
         
+        internal static string WelcomeMain {
+            get {
+                return ResourceManager.GetString("WelcomeMain", resourceCulture);
+            }
+        }
+        
         internal static string Welcome {
             get {
                 return ResourceManager.GetString("Welcome", resourceCulture);

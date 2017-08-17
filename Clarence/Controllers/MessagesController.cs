@@ -6,6 +6,7 @@ using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
 using System;
 using Actiance.Dialogs;
+using Actiance.Helpers;
 
 namespace Actiance
 {
@@ -24,6 +25,7 @@ namespace Actiance
         /// </summary>
         public async Task<HttpResponseMessage> Post([FromBody]Activity activity)
         {
+            Storage.activity = activity;
             if (activity.Type == ActivityTypes.Message)
             {
                 if (activity.AsMessageActivity().Text.Contains("/clear"))
@@ -32,8 +34,7 @@ namespace Actiance
                 }
                 else
                 {
-                    await Conversation.SendAsync(activity, () => new RootDialog());
-
+                    await Conversation.SendAsync(activity, () => new MainDialog());
                 }
             }
             else
@@ -82,6 +83,15 @@ namespace Actiance
             var clearMsg = activity.CreateReply();
             clearMsg.Text = $"Reseting everything for conversation: {activity.Conversation.Id}";
             await client.Conversations.SendToConversationAsync(clearMsg);
+        }
+
+        public static async Task SendTyping(IDialogContext context)
+        {
+            ConnectorClient connector = new ConnectorClient(new Uri(context.Activity.AsMessageActivity().ServiceUrl));
+            Activity reply = Storage.activity.CreateReply();
+            reply.Type = ActivityTypes.Typing;
+            reply.Text = null;
+            await connector.Conversations.ReplyToActivityAsync(reply);
         }
     }
 }
