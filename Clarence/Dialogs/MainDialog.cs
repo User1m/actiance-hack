@@ -13,12 +13,13 @@ using System.Reflection;
 using Actiance.Services;
 using Actiance.Helpers;
 using System.Threading;
+using Actiance.Interface;
 
 namespace Actiance.Dialogs
 {
 
     [Serializable]
-    public class MainDialog : IDialog<object>
+    public class MainDialog : IAppDialog<object>
     {
         private const string AskQestion = "Ask a question";
         private const string FlagContent = "Flag something";
@@ -26,6 +27,8 @@ namespace Actiance.Dialogs
         private const string HelpCMD = "HELP:";
         private const string AskCMD = "ASK:";
         private const string FlagCMD = "FLAG:";
+        private const string GratitudeCMD = "THANKS:";
+
 
         public Task StartAsync(IDialogContext context)
         {
@@ -36,19 +39,19 @@ namespace Actiance.Dialogs
         public virtual async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
         {
             string contextName = context.Activity.From.Name;
-            //if (Storage.user != null)
-            //{
-            //    //get user profie
-            //    await APIService.GetUser(contextName);
-            //    await APIService.GetManager(contextName);
-            //}
+            if (Storage.user == null)
+            {
+                //get user profie
+                await APIService.GetUser(contextName);
+                await APIService.GetManager(contextName);
+            }
 
             var message = await result;
 
             string msg = message.Text.ToLower();
             string cmd = null;
 
-            if (msg.Contains("help") || msg.Contains("support") || msg.Contains("problem"))
+            if (msg.Contains("help") || msg.Contains("support") || msg.Contains("problem") || msg.Contains("what can you do"))
             {
                 cmd = HelpCMD;
             }
@@ -59,6 +62,10 @@ namespace Actiance.Dialogs
             else if (msg.Contains("flag") || msg.Contains("flag:") || msg.Contains("item"))
             {
                 cmd = FlagCMD;
+            }
+            else if (msg.Contains("thank") || msg.Equals("ok"))
+            {
+                cmd = GratitudeCMD;
             }
 
             switch (cmd)
@@ -72,6 +79,9 @@ namespace Actiance.Dialogs
                 case FlagCMD:
                     await context.Forward(new FlagIssueDialog(), this.ResumeAfterDoneDialog, message, CancellationToken.None);
                     break;
+                case GratitudeCMD:
+                    await TypeAndMessage(context, "You are welcomed!");
+                    break;
                 default:
                     this.ShowOptions(context);
                     break;
@@ -83,7 +93,7 @@ namespace Actiance.Dialogs
         {
             string userName = (Storage.user == null ? context.Activity.From.Name : Storage.user.GivenName);
             string welcomeMsg = string.Format(CultureInfo.InvariantCulture, Resources.ResourceManager.GetString("Welcome"), userName);
-            PromptDialog.Choice(context, this.OnOptionSelected, new List<string>() { AskQestion, FlagContent }, welcomeMsg, "Not a valid option", 1);
+            PromptDialog.Choice(context, this.OnOptionSelected, new List<string>() { AskQestion, FlagContent }, welcomeMsg, "You didn't choose a valid option", 1);
         }
 
         private async Task OnOptionSelected(IDialogContext context, IAwaitable<string> result)
@@ -105,34 +115,38 @@ namespace Actiance.Dialogs
             catch (TooManyAttemptsException ex)
             {
                 Console.WriteLine(ex.Message);
-                await context.PostAsync($"Were you looking to do something else? Please Try Again.");
+                await TypeAndMessage(context, $"Were you looking to do something else? Please Try Again.");
                 context.Wait(this.MessageReceivedAsync);
             }
         }
 
-        private async Task ResumeAfterOptionDialog(IDialogContext context, IAwaitable<object> result)
-        {
-            try
-            {
-                //var message = await result;
-                //await context.PostAsync($"Thanks for contacting me");
-
-            }
-            catch (Exception ex)
-            {
-                await context.PostAsync($"Failed with message:\n-----------\n{ex.Message}\n-----------");
-
-            }
-            finally
-            {
-                context.Wait(this.MessageReceivedAsync);
-            }
-        }
+        //private async Task ResumeAfterOptionDialog(IDialogContext context, IAwaitable<object> result)
+        //{
+        //    try
+        //    {
+        //        //var message = await result;
+        //        //await context.PostAsync($"Thanks for contacting me");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        await context.PostAsync($"Failed with message:\n-----------\n{ex.Message}\n-----------");
+        //    }
+        //    finally
+        //    {
+        //        context.Wait(this.MessageReceivedAsync);
+        //    }
+        //}
 
         private Task ResumeAfterDoneDialog(IDialogContext context, IAwaitable<object> result)
         {
             context.Done(true);
             return Task.CompletedTask;
+        }
+
+        public async Task TypeAndMessage(IDialogContext context, string response)
+        {
+            await MessagesController.SendTyping(context);
+            await context.PostAsync(response);
         }
 
 

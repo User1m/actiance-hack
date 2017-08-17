@@ -2,17 +2,18 @@
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
+using Actiance.Interface;
 
 namespace Actiance.Dialogs
 {
     [Serializable]
-    public class FlagIssueDialog : IDialog<object>
+    public class FlagIssueDialog : IAppDialog<object>
     {
         public async Task StartAsync(IDialogContext context)
         {
             if (context.Activity.AsMessageActivity().Text.Equals("Flag something"))
             {
-                await context.PostAsync("What non-compliance related message would you like to flag?");
+                await TypeAndMessage(context, "What non-compliance related message would you like to flag?");
             }
             context.Wait(this.MessageReceivedAsync);
         }
@@ -45,8 +46,9 @@ namespace Actiance.Dialogs
                 response = responses[new Random().Next(0, responses.Length - 1)];
             }
 
-            await MessagesController.SendTyping(context);
-            await context.PostAsync(response);
+            //await MessagesController.SendTyping(context);
+            //await context.PostAsync(response);
+            await TypeAndMessage(context, response);
 
             if (continueDialog)
             {
@@ -56,6 +58,12 @@ namespace Actiance.Dialogs
             {
                 context.Done(true);
             }
+        }
+
+        public async Task TypeAndMessage(IDialogContext context, string response)
+        {
+            await MessagesController.SendTyping(context);
+            await context.PostAsync(response);
         }
     }
 }

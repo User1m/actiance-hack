@@ -2,19 +2,18 @@
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
-using System.Collections.Generic;
-using Actiance.Helpers;
+using Actiance.Interface;
 
 namespace Actiance.Dialogs
 {
     [Serializable]
-    public class AskQuestionsDialog : IDialog<object>
+    public class AskQuestionsDialog : IAppDialog<object>
     {
         public async Task StartAsync(IDialogContext context)
         {
             if (context.Activity.AsMessageActivity().Text.Equals("Ask a question"))
             {
-                await context.PostAsync("What compliance related question would you like to ask?");
+                await TypeAndMessage(context, "What compliance related question would you like to ask?");
             }
 
             context.Wait(this.MessageReceivedAsync);
@@ -54,8 +53,7 @@ namespace Actiance.Dialogs
                 response = responses[new Random().Next(0, responses.Length - 1)];
             }
 
-            await MessagesController.SendTyping(context);
-            await context.PostAsync(response);
+            await TypeAndMessage(context, response);
 
             if (continueDialog)
             {
@@ -65,7 +63,11 @@ namespace Actiance.Dialogs
             {
                 context.Done(true);
             }
-
+        }
+        public async Task TypeAndMessage(IDialogContext context, string response)
+        {
+            await MessagesController.SendTyping(context);
+            await context.PostAsync(response);
         }
     }
 }

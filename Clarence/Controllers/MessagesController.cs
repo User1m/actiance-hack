@@ -59,7 +59,7 @@ namespace Actiance
 
             connector = new ConnectorClient(new Uri(activity.ServiceUrl));
             var clearMsg = activity.CreateReply();
-            clearMsg.Text = $"Reseting everything for conversation:\n{activity.Conversation.Id}";
+            clearMsg.Text = $"Reseting everything for conversation: {activity.Conversation.Id}";
             await connector.Conversations.SendToConversationAsync(clearMsg);
         }
 
