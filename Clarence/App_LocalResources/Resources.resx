@@ -76,7 +76,7 @@ illegal
 Notice
 	</data>
 	<data name="EmailContent">
-An instant messages sent by {0} and found to be against compliance guidelance and was logged by the Actiance server. 
+An instant message that {0} either sent or recieved was found to be against compliance guidelance and was logged by the Actiance server. 
 Such messages are subject to archival, monitoring, or review and/or disclosure by management.
 		
 MESSAGE CONTENT: --------------
