@@ -74,7 +74,7 @@ namespace Actiance.Services
                     members = await MessagesController.GetConverationMembers();
                 }
 
-                Console.WriteLine("-------------\n INGESTING ALL USER MESSAGES \n-------------");
+                Console.WriteLine("-------------\n STARTED: INGESTING USER MESSAGES \n-------------");
 
                 foreach (var member in members)
                 {
@@ -82,6 +82,8 @@ namespace Actiance.Services
                     Storage.userMessages.Add(member.ObjectId, userMessages);
                     await IngestMessagesForUser(member.ObjectId);
                 }
+
+                Console.WriteLine("-------------\n DONE: INGESTING USER MESSAGES \n-------------");
 
                 t.Elapsed += async delegate
                 {
