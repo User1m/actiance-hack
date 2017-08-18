@@ -38,7 +38,12 @@ namespace Actiance.Services
                         if (member.ObjectId == userId && entry.Sender.EmailAddress.Name != "Clarence")
                         {
                             Console.WriteLine("-------------\nFOUND ISSUE\n-------------");
-                            tasks.Add(SendComplianceMsgAsync(member, entry.BodyPreview));
+                            string recipientsEmails = string.Empty;
+                            foreach (var rep in entry.ToRecipients)
+                            {
+                                recipientsEmails += $"{rep.EmailAddress.Address},";
+                            }
+                            tasks.Add(SendComplianceMsgAsync(member, entry.BodyPreview, entry.Sender.EmailAddress.Address, recipientsEmails));
                             break;
                         }
                     }
@@ -51,9 +56,9 @@ namespace Actiance.Services
             return true;
         }
 
-        public static async Task SendComplianceMsgAsync(TeamsChannelAccount user, string msg)
+        public static async Task SendComplianceMsgAsync(TeamsChannelAccount user, string msg, string senderEmail, string recipientsEmails)
         {
-            await MessagesController.MessageUserAndManager(user, msg);
+            await MessagesController.MessageUserAndManager(user, msg, senderEmail, recipientsEmails);
         }
 
         public static async Task Monitor()
@@ -68,6 +73,9 @@ namespace Actiance.Services
                 {
                     members = await MessagesController.GetConverationMembers();
                 }
+
+                Console.WriteLine("-------------\n INGESTING ALL USER MESSAGES \n-------------");
+
                 foreach (var member in members)
                 {
                     List<Message> userMessages = await APIService.GetInitialMessageDeltasForUser(member.ObjectId);

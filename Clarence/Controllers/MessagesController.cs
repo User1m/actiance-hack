@@ -96,7 +96,7 @@ namespace Actiance
             return members;
         }
 
-        public static async Task EmailManager(string userFullName, string flaggedMsg, User manager)
+        public static async Task EmailUsers(string userFullName, string flaggedMsg, List<Recipient> recipients, string managerId)
         {
             ///email manager
             Message email = new Message
@@ -107,25 +107,19 @@ namespace Actiance
                     ContentType = BodyType.Text,
                 },
                 Subject = Resources.ResourceManager.GetString("EmailSubject"),
-                ToRecipients = new List<Recipient> {
-                    new Recipient{
-                        EmailAddress = new EmailAddress{
-                            Address = manager.Mail
-                        }
-                    }
-                }
+                ToRecipients = recipients
             };
 
             // Send the message.
-            await APIService.graphv1Client.Users[manager.Id].SendMail(email, true).Request().PostAsync();
+            await APIService.graphv1Client.Users[managerId].SendMail(email, true).Request().PostAsync();
         }
 
-        public static async Task MessageUserAndManager(TeamsChannelAccount user, string msg = "")
+        public static async Task MessageUserAndManager(TeamsChannelAccount user, string msg, string senderEmail, string recipientsEmails)
         {
             // Create or get existing chat conversation with user
             var response = connector.Conversations.CreateOrGetDirectConversation(Storage.activity.Recipient, user, Storage.activity.GetTenantId());
 
-            Microsoft.Graph.User manager = Storage.manager;
+            User manager = Storage.manager;
             if (Storage.user.Id != user.ObjectId)
             {
                 manager = await APIService.GetUserManager(user.ObjectId);
@@ -143,8 +137,41 @@ namespace Actiance
                     Id = response.Id
                 },
             };
+            var recipients = new List<Recipient> {
+                new Recipient{
+                    EmailAddress = new EmailAddress{
+                        Address = manager.Mail
+                    }
+                },
+                new Recipient{
+                    EmailAddress = new EmailAddress{
+                        Address = senderEmail
+                    }
+                },
 
-            await EmailManager($"{user.GivenName} {user.Surname}", msg, manager);
+            };
+
+
+            var recipientsEmailsArray = recipientsEmails.Split(',');
+            foreach (var email in recipientsEmailsArray)
+            {
+                if (!string.IsNullOrEmpty(email))
+                {
+                    recipients.Add(
+                     new Recipient
+                     {
+                         EmailAddress = new EmailAddress
+                         {
+                             Address = email
+                         }
+                     }
+                    );
+                }
+
+            }
+
+
+            await EmailUsers($"{user.GivenName} {user.Surname}", msg, recipients, manager.Id);
 
             // Post the message to chat conversation with user
             await connector.Conversations.SendToConversationAsync(newMessage, response.Id);
