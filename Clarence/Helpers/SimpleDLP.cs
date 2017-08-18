@@ -11,7 +11,8 @@ namespace Actiance.Helpers
         {
             "share",
             "short sell",
-            "illegal"
+            "illegal",
+            "ssn"
         };
 
         private static string ssnRegExStr = "[0-9]{3}-[0-9]{2}-[0-9]{4}";
@@ -29,28 +30,29 @@ namespace Actiance.Helpers
             try
             {
                 string msgInLowerCase = msg.ToLower();
-                foreach(string keyword in dlpKeywords)
+                foreach (string keyword in dlpKeywords)
                 {
                     retVal = msgInLowerCase.Contains(keyword);
 
-                    if(retVal)
+                    if (retVal)
                     {
                         break;
                     }
                     else
                     {
-                        foreach(Regex regex in regExDLPs)
+                        foreach (Regex regex in regExDLPs)
                         {
                             retVal = regex.IsMatch(msgInLowerCase);
-                            if(retVal)
+                            if (retVal)
                             {
                                 break;
                             }
-                            
+
                         }
                     }
                 }
-            } catch(Exception e)
+            }
+            catch (Exception e)
             {
                 Console.WriteLine("Error while checking for restricted phrases: " + e.Message);
                 Console.WriteLine(e.StackTrace);

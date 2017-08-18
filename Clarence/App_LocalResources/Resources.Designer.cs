@@ -142,5 +142,11 @@ namespace Actiance.App_LocalResources {
                 return ResourceManager.GetString("EmailContent", resourceCulture);
             }
         }
+        
+        internal static string Instructions {
+            get {
+                return ResourceManager.GetString("Instructions", resourceCulture);
+            }
+        }
     }
 }

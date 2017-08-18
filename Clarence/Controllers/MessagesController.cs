@@ -12,6 +12,7 @@ using Actiance.App_LocalResources;
 using Microsoft.Graph;
 using System.Collections.Generic;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
+using System.Threading;
 
 namespace Actiance
 {
@@ -20,6 +21,7 @@ namespace Actiance
     {
 
         private static ConnectorClient connector;
+        //private Timer timer;
 
         /// <summary>
         /// POST: api/Messages
@@ -40,10 +42,14 @@ namespace Actiance
                 else
                 {
                     await Microsoft.Bot.Builder.Dialogs.Conversation.SendAsync(activity, () => new MainDialog());
+
                 }
             }
             else
+            {
                 HandleSystemMessage(activity);
+            }
+
             return Ok();
         }
 

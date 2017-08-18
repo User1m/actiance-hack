@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Graph;
 using Microsoft.Bot.Connector;
 using Microsoft.Bot.Builder.Dialogs;
+using Microsoft.Bot.Connector.Teams.Models;
 
 namespace Actiance.Helpers
 {
@@ -15,5 +16,6 @@ namespace Actiance.Helpers
         public static IDialogContext context { get; set; } = null;
         public static Dictionary<string, IMessageDeltaCollectionPage> deltaStore { get; set; } = new Dictionary<string, IMessageDeltaCollectionPage>();
         public static Dictionary<string, List<Message>> userMessages { get; set; } = new Dictionary<string, List<Message>>();
+        //public static TeamsChannelAccount[] ChannelUsers = await MessagesController.GetConverationMembers();
     }
 }

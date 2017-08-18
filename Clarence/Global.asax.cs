@@ -4,11 +4,15 @@ using Actiance.Services;
 using Microsoft.Bot.Builder.Dialogs;
 using Actiance.Helpers;
 using Autofac;
+using System.Threading;
+using System;
+using System.Threading.Tasks;
 
 namespace Actiance
 {
     public class WebApiApplication : System.Web.HttpApplication
     {
+        //private Timer timer;
         protected void Application_Start()
         {
             //Conversation.UpdateContainer(builder =>

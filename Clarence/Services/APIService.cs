@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Graph;
 using Actiance.Controllers;
 using Actiance.Helpers;
+using System.Linq;
 
 namespace Actiance.Services
 {
@@ -79,25 +80,43 @@ namespace Actiance.Services
             return manager;
         }
 
-        public static async Task<bool> GetUpdatedMessageFromDeltaLink(string userid, IMessageDeltaCollectionPage page)
+        public static async Task<bool> GetUpdatedMessageFromDeltaLink()
         {
-            object deltaLink;
-
-            if (page.AdditionalData.TryGetValue("@odata.deltaLink", out deltaLink))
+            //var localStore = Storage.deltaStore;
+            foreach (KeyValuePair<string, IMessageDeltaCollectionPage> query in Storage.deltaStore.ToList())
             {
-                page.InitializeNextPageRequest(graphBetaClient, deltaLink.ToString());
-                page = await page.NextPageRequest.GetAsync();
-                foreach (var message in page)
+                var page = query.Value;
+                List<Message> messages = new List<Message>();
+
+                while (page.NextPageRequest != null)
                 {
-                    Storage.userMessages[userid].Add(message);
+                    page = await page.NextPageRequest.GetAsync();
+                    foreach (var message in page)
+                    {
+                        messages.Add(message);
+                    }
                 }
+
+                object deltaLink;
+                if (page.AdditionalData.TryGetValue("@odata.deltaLink", out deltaLink))
+                {
+                    page.InitializeNextPageRequest(graphBetaClient, deltaLink.ToString());
+                    page = await page.NextPageRequest.GetAsync();
+                    foreach (var message in page)
+                    {
+                        messages.Add(message);
+                    }
+                }
+
+                //update messages & deltas
+                Storage.userMessages[query.Key] = messages;
+                Storage.deltaStore[query.Key] = page;
             }
 
-            Storage.deltaStore[userid] = page;
             return true;
         }
 
-        public static async Task<List<Message>> GetMessageDeltasForUser(string userId)
+        public static async Task<List<Message>> GetInitialMessageDeltasForUser(string userId)
         {
 
             //get https://graph.microsoft.com/beta/users/clmb@actiancehack.onmicrosoft.com/mailFolders('teamchat')/messages/delta?$filter=receivedDateTime ge 2017-08-17T03:43:08Z
@@ -112,8 +131,9 @@ namespace Actiance.Services
 
             List<Message> messages = new List<Message>();
             /// Get our first delta page.
-            string filter = $"receivedDateTime ge {DateTime.Now.ToString("yyyy-MM-ddThh:mm:ssZ")}";
-            var messagesDeltaCollectionPage = await graphBetaClient.Users[userId].MailFolders["teamchat"].Messages.Delta().Request().Filter(filter).GetAsync();
+            //string filter = $"receivedDateTime ge {DateTime.Now.ToString("yyyy-MM-ddThh:mm:ssZ")}";
+            //var messagesDeltaCollectionPage = await graphBetaClient.Users[userId].MailFolders["teamchat"].Messages.Delta().Request().Filter(filter).GetAsync();
+            var messagesDeltaCollectionPage = await graphBetaClient.Users[userId].MailFolders["teamchat"].Messages.Delta().Request().GetAsync();
 
             /// Go through all of the delta pages so that we can get the delta link on the last page.
             while (messagesDeltaCollectionPage.NextPageRequest != null)
@@ -133,7 +153,10 @@ namespace Actiance.Services
             {
                 messagesDeltaCollectionPage.InitializeNextPageRequest(graphBetaClient, deltaLink.ToString());
                 messagesDeltaCollectionPage = await messagesDeltaCollectionPage.NextPageRequest.GetAsync();
-
+                foreach (var message in messagesDeltaCollectionPage)
+                {
+                    messages.Add(message);
+                }
             }
 
             Storage.deltaStore.Add(userId, messagesDeltaCollectionPage);

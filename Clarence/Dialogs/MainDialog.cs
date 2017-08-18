@@ -9,6 +9,7 @@ using Actiance.Services;
 using Actiance.Helpers;
 using System.Threading;
 using Actiance.Interface;
+using Microsoft.Graph;
 
 namespace Actiance.Dialogs
 {
@@ -22,10 +23,9 @@ namespace Actiance.Dialogs
         private const string HelpCMD = "HELP:";
         private const string AskCMD = "ASK:";
         private const string FlagCMD = "FLAG:";
+        private const string GrettingCMD = "HELLO:";
         private const string GratitudeCMD = "THANKS:";
         private const string DebugCMD = "DEBUG:";
-
-
 
         public Task StartAsync(IDialogContext context)
         {
@@ -43,21 +43,43 @@ namespace Actiance.Dialogs
                 Storage.user = await APIService.GetUserProfile(contextName);
                 Storage.manager = await APIService.GetUserManager(Storage.user.Id);
 
+                //System.Timers.Timer t = new System.Timers.Timer();
+                //t.AutoReset = false;
+                //t.Interval = 1 * 1000;
                 //start monitoring service on background thread
                 //await MontiorService.IngestMessagesForUser(Storage.user.Id);
-                new Thread(async () =>
+                Thread thread = new Thread(async () =>
                 {
                     Thread.CurrentThread.IsBackground = true;
-                    try
-                    {
-                        await MontiorService.IngestMessagesForUser(Storage.user.Id);
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine($"ERROR IN BACKGROUND THREAD: {e.Message}");
-                        Console.WriteLine($"ERROR IN BACKGROUND THREAD: {e.StackTrace}");
-                    }
-                }).Start();
+                    await MonitorService.Monitor();
+                    //new Timer(new TimerCallback(MonitorService.PollForUserMessages), null, 10 * 1000, Timeout.Infinite);
+
+                    //t.Elapsed += delegate
+                    //{
+                    //    try
+                    //    {
+                    //        Console.WriteLine("Timer1");
+                    //    }
+                    //    catch (Exception ex)
+                    //    {
+                    //        // TODO log exception
+                    //        Console.WriteLine(ex.Message);
+                    //    }
+                    //    finally
+                    //    {
+                    //        t.Start();
+                    //    }
+                    //};
+
+                    //await Task.Factory.StartNew(() =>
+                    //{
+                    //    Console.WriteLine("Timer2");
+                    //    t.Start();
+                    //}, TaskCreationOptions.LongRunning);
+
+                });
+                thread.Start();
+
             }
 
             var message = await result;
@@ -85,6 +107,10 @@ namespace Actiance.Dialogs
             {
                 cmd = DebugCMD;
             }
+            else if (msg.Contains("hi") || msg.Contains("hello") || msg.Contains("hey"))
+            {
+                cmd = GrettingCMD;
+            }
 
 
             switch (cmd)
@@ -104,8 +130,12 @@ namespace Actiance.Dialogs
                 case DebugCMD:
                     await TypeAndMessage(context, $"{Storage.user.GivenName}'s Manager is {Storage.manager.GivenName} at {DateTime.Now.ToString("yyyy-MM-ddThh:mm:ssZ")}");
                     break;
+                case GrettingCMD:
+                    await TypeAndMessage(context, string.Format(Resources.ResourceManager.GetString("Welcome"), $"{Storage.user.GivenName}"));
+                    break;
                 default:
-                    this.ShowOptions(context);
+                    await TypeAndMessage(context, string.Format(Resources.ResourceManager.GetString("Instructions")));
+                    //this.ShowOptions(context);
                     break;
             }
 

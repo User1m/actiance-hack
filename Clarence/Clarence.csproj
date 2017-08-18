@@ -160,7 +160,7 @@
     <Compile Include="Helpers\Middleware.cs" />
     <Compile Include="Dialogs\SupportDialog.cs" />
     <Compile Include="Dialogs\MainDialog.cs" />
-    <Compile Include="Services\MontiorService.cs" />
+    <Compile Include="Services\MonitorService.cs" />
     <Compile Include="Helpers\AzureAuthProvider.cs" />
     <Compile Include="Interfaces\IAppDialog.cs" />
   </ItemGroup>
