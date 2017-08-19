@@ -10,6 +10,7 @@ Open Actiance.sln in Visual Studio
 
 ## Code Walk-through
 
+*Helpers/Storage.cs* - in memory data store
 
 ### Dialogs/MainDialog.cs
 * Call MS Graph to get the profile of the user and their manager
@@ -45,6 +46,8 @@ if (members == null)
 ```
 
 * For each member, make a delta query for thier messages, store them, and ingest those messages
+* Store delta query for future calls
+
 ```cs
 foreach (var member in members)
 {
@@ -81,6 +84,7 @@ public async static Task<bool> IngestMessagesForUser(string userId)
                   {
                       recipientsEmails += $"{rep.EmailAddress.Address},";
                   }
+                  //Send Compliance Message if DLP content found
                   tasks.Add(SendComplianceMsgAsync(member, entry.BodyPreview, entry.Sender.EmailAddress.Address, recipientsEmails));
                   break;
               }
@@ -89,7 +93,7 @@ public async static Task<bool> IngestMessagesForUser(string userId)
  ...
 ```
 
-* Start timer to call delta query for new messages posted to user every 10secs. *Timer is running in the backgroun as well*
+* Start timer (every 10secs) to call delta query for new messages posted to user. *Timer is running in the backgroun as well*
 
 *public static async Task Monitor()*
 ```cs
@@ -116,7 +120,7 @@ t.Elapsed += async delegate
 t.Start();
 ```
 
-* Call stored Delta query for new messages
+* Call stored delta query for new messages
 * Ingest those messages and check for DLP content
 
 ```cs
