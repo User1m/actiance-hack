@@ -1,11 +1,13 @@
 # Actiance Hack
 
-The purpose of this hack is to enable Actiance to leverage Microsoft Graph APIs through the use of a generalized chat bot.
+The purpose of this hack is to enable Actiance to leverage and understand Microsoft Graph Teams realted APIs.
 
 ## Getting Started
 
 ```
 Open Actiance.sln in Visual Studio
+Run Clarence project
+Connect to Bot via BotFramework Emulator or sideloaded Teams bot
 ```
 
 ## Code Walk-through
@@ -37,28 +39,69 @@ if (Storage.user == null)
 ### Services/MonitorService.cs
 * Get all members of the Teams conversation
 
-*public static async Task Monitor()*
 ```cs
-if (members == null)
+public static async Task Monitor()
 {
-    members = await MessagesController.GetConverationMembers();
-}
+    System.Timers.Timer t = new System.Timers.Timer();
+    t.AutoReset = false;
+    t.Interval = 10 * 1000;
+
+    try
+    {
+        if (members == null)
+        {
+            members = await MessagesController.GetConverationMembers();
+        }
 ```
 
-* For each member, make a delta query for thier messages, store them, and ingest those messages
-* Store delta query for future calls
+
+* For each member, make a delta query for their messages, store them, and ingest those messages
+* Store delta queries for future calls (done in *APIService.GetInitialMessageDeltasForUser()*)
 
 ```cs
-foreach (var member in members)
-{
-    List<Message> userMessages = await APIService.GetInitialMessageDeltasForUser(member.ObjectId);
-    Storage.userMessages.Add(member.ObjectId, userMessages);
-    await IngestMessagesForUser(member.ObjectId);
+        Console.WriteLine("-------------\n STARTED: INGESTING USER MESSAGES \n-------------");
+
+        foreach (var member in members)
+        {
+            List<Message> userMessages = await APIService.GetInitialMessageDeltasForUser(member.ObjectId);
+            Storage.userMessages.Add(member.ObjectId, userMessages);
+            await IngestMessagesForUser(member.ObjectId);
+        }
+
+        Console.WriteLine("-------------\n DONE: INGESTING USER MESSAGES \n-------------");
+```
+
+* Start timer (every 10secs) to call delta query for new messages posted to user (done in *PollForUserMessages()*). *Timer is running in the backgroun as well*
+
+```cs
+        t.Elapsed += async delegate
+        {
+            try
+            {
+                await PollForUserMessages();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"ERROR IN TIMER THREAD: {e.Message}");
+                Console.WriteLine($"ERROR IN TIMER THREAD: {e.StackTrace}");
+            }
+            finally
+            {
+                t.Start();
+            }
+        };
+        t.Start();
+    }
+    catch (Exception e)
+    {
+        Console.WriteLine($"ERROR IN BACKGROUND THREAD-0: {e.Message}");
+        Console.WriteLine($"ERROR IN BACKGROUND THREAD-0: {e.StackTrace}");
+    }
 }
 ```
 
 * For each message of a member, use SimpleDLP Helper to check if message content contains DLP content
-* Send Compliance Message if DLP content found
+* Send Compliance Message if DLP content is found
 
 ```cs
 public async static Task<bool> IngestMessagesForUser(string userId)
@@ -67,7 +110,6 @@ public async static Task<bool> IngestMessagesForUser(string userId)
 
   foreach (Message entry in Storage.userMessages[userId])
   {
-      //if (entry.BodyPreview.Contains(Resources.ResourceManager.GetString("DLPPhrase")))
       if (SimpleDLP.containsRestrictedPhrases(entry.BodyPreview))
       {
           if (members == null)
@@ -93,35 +135,8 @@ public async static Task<bool> IngestMessagesForUser(string userId)
  ...
 ```
 
-* Start timer (every 10secs) to call delta query for new messages posted to user. *Timer is running in the backgroun as well*
-
-*public static async Task Monitor()*
-```cs
-System.Timers.Timer t = new System.Timers.Timer();
-t.AutoReset = false;
-t.Interval = 10 * 1000;
-...
-t.Elapsed += async delegate
-{
-    try
-    {
-        await PollForUserMessages();
-    }
-    catch (Exception e)
-    {
-        Console.WriteLine($"ERROR IN TIMER THREAD: {e.Message}");
-        Console.WriteLine($"ERROR IN TIMER THREAD: {e.StackTrace}");
-    }
-    finally
-    {
-        t.Start();
-    }
-};
-t.Start();
-```
-
-* Call stored delta query for new messages
-* Ingest those messages and check for DLP content
+* Call stored delta query for new messages (done in *APIService.GetUpdatedMessageFromDeltaLink()*)
+* Ingest those messages and check for DLP content (done in *IngestMessagesForUser()*)
 
 ```cs
 public static async Task<bool> PollForUserMessages()
