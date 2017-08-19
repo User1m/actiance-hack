@@ -43,43 +43,14 @@ namespace Actiance.Dialogs
                 Storage.user = await APIService.GetUserProfile(contextName);
                 Storage.manager = await APIService.GetUserManager(Storage.user.Id);
 
-                //System.Timers.Timer t = new System.Timers.Timer();
-                //t.AutoReset = false;
-                //t.Interval = 1 * 1000;
-                //start monitoring service on background thread
+                ///start monitoring service on background thread
                 //await MontiorService.IngestMessagesForUser(Storage.user.Id);
                 Thread thread = new Thread(async () =>
                 {
                     Thread.CurrentThread.IsBackground = true;
                     await MonitorService.Monitor();
-                    //new Timer(new TimerCallback(MonitorService.PollForUserMessages), null, 10 * 1000, Timeout.Infinite);
-
-                    //t.Elapsed += delegate
-                    //{
-                    //    try
-                    //    {
-                    //        Console.WriteLine("Timer1");
-                    //    }
-                    //    catch (Exception ex)
-                    //    {
-                    //        // TODO log exception
-                    //        Console.WriteLine(ex.Message);
-                    //    }
-                    //    finally
-                    //    {
-                    //        t.Start();
-                    //    }
-                    //};
-
-                    //await Task.Factory.StartNew(() =>
-                    //{
-                    //    Console.WriteLine("Timer2");
-                    //    t.Start();
-                    //}, TaskCreationOptions.LongRunning);
-
                 });
                 thread.Start();
-
             }
 
             var message = await result;
