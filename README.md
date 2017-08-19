@@ -1,13 +1,13 @@
 # Actiance Hack
 
-The purpose of this hack is to enable Actiance to leverage and understand Microsoft Graph Teams realted APIs.
+The purpose of this hack is to enable Actiance to leverage and understand Microsoft Graph Teams related APIs.
 
 ## Getting Started
 
 ```
 Open Actiance.sln in Visual Studio
 Run Clarence project
-Connect to Bot via BotFramework Emulator or sideloaded Teams bot
+Connect to Bot via BotFramework Emulator or Side-loaded Teams bot
 ```
 
 ## Code Walk-through
@@ -71,7 +71,7 @@ public static async Task Monitor()
         Console.WriteLine("-------------\n DONE: INGESTING USER MESSAGES \n-------------");
 ```
 
-* Start timer (every 10secs) to call delta query for new messages posted to user (done in *PollForUserMessages()*). *Timer is running in the backgroun as well*
+* Start timer (every 10secs) to call delta query for new messages posted to user (done in *PollForUserMessages()*). *Timer is running in the background as well*
 
 ```cs
         t.Elapsed += async delegate
