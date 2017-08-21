@@ -35,20 +35,32 @@ namespace Actiance.Dialogs
 
         public virtual async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
         {
-            Storage.context = context;
+            if (Storage.context == null)
+                Storage.context = context;
+
             string contextName = context.Activity.From.Name;
-            if (Storage.user == null)
+            User user = await APIService.GetUserProfile(contextName);
+            Storage.userContextNameToIdStore.Add(contextName, user.Id);
+
+            if (!Storage.userStore[user.Id].ContainsKey(Storage.selfInfo))
             {
-                //call API services
-                Storage.user = await APIService.GetUserProfile(contextName);
-                Storage.manager = await APIService.GetUserManager(Storage.user.Id);
+                try
+                {
+                    ///call API services
+                    Storage.userStore[user.Id].Add(Storage.selfInfo, user);
+                    Storage.userStore[user.Id].Add(Storage.managerInfo, await APIService.GetUserManager(user.Id));
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"ERROR STORING USERS: {e.Message}");
+                    Console.WriteLine($"ERROR STORING USERS: {e.StackTrace}");
+                }
 
                 ///start monitoring service on background thread
-                //await MontiorService.IngestMessagesForUser(Storage.user.Id);
                 Thread thread = new Thread(async () =>
                 {
                     Thread.CurrentThread.IsBackground = true;
-                    await MonitorService.Monitor();
+                    await MonitorService.Monitor(user.Id);
                 });
                 thread.Start();
             }
@@ -99,10 +111,10 @@ namespace Actiance.Dialogs
                     await TypeAndMessage(context, Resources.ResourceManager.GetString("Welcomed"));
                     break;
                 case DebugCMD:
-                    await TypeAndMessage(context, $"{Storage.user.GivenName}'s Manager is {Storage.manager.GivenName} at {DateTime.Now.ToString("yyyy-MM-ddThh:mm:ssZ")}");
+                    await TypeAndMessage(context, $"{(Storage.userStore[user.Id][Storage.selfInfo] as User).GivenName}'s Manager is {(Storage.userStore[user.Id][Storage.managerInfo] as User).GivenName} at {DateTime.Now.ToString("yyyy-MM-ddThh:mm:ssZ")}");
                     break;
                 case GrettingCMD:
-                    await TypeAndMessage(context, string.Format(Resources.ResourceManager.GetString("Welcome"), $"{Storage.user.GivenName}"));
+                    await TypeAndMessage(context, string.Format(Resources.ResourceManager.GetString("Welcome"), $"{(Storage.userStore[user.Id][Storage.selfInfo] as User).GivenName}"));
                     break;
                 default:
                     await TypeAndMessage(context, string.Format(Resources.ResourceManager.GetString("Instructions")));
@@ -114,13 +126,15 @@ namespace Actiance.Dialogs
 
         private void ShowOptions(IDialogContext context)
         {
-            string userName = (Storage.user == null ? context.Activity.From.Name : Storage.user.GivenName);
+            string contextName = context.Activity.From.Name;
+            string userName = (Storage.userStore[contextName][Storage.selfInfo] == null ? context.Activity.From.Name : (Storage.userStore[contextName][Storage.selfInfo] as User).GivenName);
             string welcomeMsg = string.Format(CultureInfo.InvariantCulture, Resources.ResourceManager.GetString("Welcome"), userName);
             PromptDialog.Choice(context, this.OnOptionSelected, new List<string>() { AskQestion, FlagContent }, welcomeMsg, Resources.ResourceManager.GetString("InvalidOption"), 1);
         }
 
         private async Task OnOptionSelected(IDialogContext context, IAwaitable<string> result)
         {
+            string contextName = context.Activity.From.Name;
             try
             {
                 string optionSelected = await result;
@@ -138,7 +152,7 @@ namespace Actiance.Dialogs
             catch (TooManyAttemptsException ex)
             {
                 Console.WriteLine(ex.Message);
-                await TypeAndMessage(context, string.Format(Resources.ResourceManager.GetString("OptionError"), (Storage.user == null ? context.Activity.From.Name : Storage.user.GivenName)));
+                await TypeAndMessage(context, string.Format(Resources.ResourceManager.GetString("OptionError"), (Storage.userStore[contextName][Storage.selfInfo] == null ? context.Activity.From.Name : (Storage.userStore[contextName][Storage.selfInfo] as User).GivenName)));
                 context.Wait(this.MessageReceivedAsync);
             }
         }

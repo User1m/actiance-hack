@@ -22,20 +22,14 @@ namespace Actiance.Services
 
         public async static Task<bool> IngestMessagesForUser(string userId)
         {
-            var tasks = new List<Task>();
-
-            foreach (Message entry in Storage.userMessages[userId])
+            if (Storage.userMessages.ContainsKey(userId))
             {
-                //if (entry.BodyPreview.Contains(Resources.ResourceManager.GetString("DLPPhrase")))
-                if (SimpleDLP.containsRestrictedPhrases(entry.BodyPreview))
+                var tasks = new List<Task>();
+                foreach (Message entry in Storage.userMessages[userId])
                 {
-                    if (members == null)
+                    if (SimpleDLP.containsRestrictedPhrases(entry.BodyPreview))
                     {
-                        members = await MessagesController.GetConverationMembers();
-                    }
-                    foreach (var member in members)
-                    {
-                        if (member.ObjectId == userId && entry.Sender.EmailAddress.Name != "Clarence")
+                        if (entry.Sender.EmailAddress.Name != "Clarence")
                         {
                             Console.WriteLine("-------------\nFOUND ISSUE\n-------------");
                             string recipientsEmails = string.Empty;
@@ -43,65 +37,72 @@ namespace Actiance.Services
                             {
                                 recipientsEmails += $"{rep.EmailAddress.Address},";
                             }
-                            tasks.Add(SendComplianceMsgAsync(member, entry.BodyPreview, entry.Sender.EmailAddress.Address, recipientsEmails));
+                            tasks.Add(SendComplianceMsgAsync(Storage.userStore[userId][Storage.teamsInfo] as TeamsChannelAccount, entry.BodyPreview, entry.Sender.EmailAddress.Address, recipientsEmails));
                             break;
                         }
                     }
-                }
 
-                ///message user once
-                if (tasks.Count > 0) { break; }
+                    ///message user once
+                    if (tasks.Count > 0) { break; }
+                }
+                await Task.WhenAll(tasks);
             }
-            await Task.WhenAll(tasks);
             return true;
         }
 
         public static async Task SendComplianceMsgAsync(TeamsChannelAccount user, string msg, string senderEmail, string recipientsEmails)
         {
-            await MessagesController.MessageUserAndManager(user, msg, senderEmail, recipientsEmails);
+            await MessagesController.MessageUsers(user, msg, senderEmail, recipientsEmails);
         }
 
-        public static async Task Monitor()
+        public static async Task Monitor(string objectId)
         {
-            System.Timers.Timer t = new System.Timers.Timer();
-            t.AutoReset = false;
-            t.Interval = 10 * 1000;
-
             try
             {
-                if (members == null)
-                {
-                    members = await MessagesController.GetConverationMembers();
-                }
+                Console.WriteLine($"-------------\nSTARTED INGESTING USER: {objectId} MESSAGES\n-------------");
 
-                Console.WriteLine("-------------\n STARTED: INGESTING USER MESSAGES \n-------------");
+                //foreach (var objectId in Storage.userStore.Keys)
+                //{
+                List<Message> userMessages = await APIService.GetInitialMessageDeltasForUser(objectId);
 
-                foreach (var member in members)
-                {
-                    List<Message> userMessages = await APIService.GetInitialMessageDeltasForUser(member.ObjectId);
-                    Storage.userMessages.Add(member.ObjectId, userMessages);
-                    await IngestMessagesForUser(member.ObjectId);
-                }
+                //if (Storage.userMessages[objectId] == null)
+                Storage.userMessages.Add(objectId, userMessages);
+                //else
+                //Storage.userMessages[objectId] = userMessages;
 
-                Console.WriteLine("-------------\n DONE: INGESTING USER MESSAGES \n-------------");
+                await IngestMessagesForUser(objectId);
+                //}
 
-                t.Elapsed += async delegate
-                {
-                    try
-                    {
-                        await PollForUserMessages();
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine($"ERROR IN TIMER THREAD: {e.Message}");
-                        Console.WriteLine($"ERROR IN TIMER THREAD: {e.StackTrace}");
-                    }
-                    finally
-                    {
-                        t.Start();
-                    }
-                };
-                t.Start();
+                Console.WriteLine($"-------------\nDONE INGESTING USER: {objectId} MESSAGES\n-------------");
+
+
+                // Thread thread = new Thread(() =>
+                //{
+                //    System.Timers.Timer t = new System.Timers.Timer();
+                //    t.AutoReset = false;
+                //    t.Interval = 10 * 1000;
+
+                //    Thread.CurrentThread.IsBackground = true;
+                //    Console.WriteLine($"-------------\nSTARTED TIMER FOR USER: {objectId}\n-------------");
+                //    t.Elapsed += async delegate
+                //    {
+                //        try
+                //        {
+                //            await PollForUserMessages();
+                //        }
+                //        catch (Exception e)
+                //        {
+                //            Console.WriteLine($"ERROR IN TIMER THREAD: {e.Message}");
+                //            Console.WriteLine($"ERROR IN TIMER THREAD: {e.StackTrace}");
+                //        }
+                //        finally
+                //        {
+                //            t.Start();
+                //        }
+                //    };
+                //    t.Start();
+                //});
+                //thread.Start();
             }
             catch (Exception e)
             {
@@ -119,9 +120,9 @@ namespace Actiance.Services
                 if (Storage.deltaStore.Count > 0)
                 {
                     await APIService.GetUpdatedMessageFromDeltaLink();
-                    foreach (var member in members)
+                    foreach (var objectId in Storage.userStore.Keys)
                     {
-                        await IngestMessagesForUser(member.ObjectId);
+                        await IngestMessagesForUser(objectId);
                     }
                 }
             }

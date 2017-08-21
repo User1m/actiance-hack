@@ -13,6 +13,7 @@ using Microsoft.Graph;
 using System.Collections.Generic;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using System.Threading;
+using System.Linq;
 
 namespace Actiance
 {
@@ -32,6 +33,12 @@ namespace Actiance
             Storage.activity = activity;
             connector = new ConnectorClient(new Uri(activity.ServiceUrl));
 
+            var members = await GetConverationMembers();
+            foreach (var member in members)
+            {
+                Storage.userStore.Add(member.ObjectId, new Dictionary<string, object> { { Storage.teamsInfo, member } });
+            }
+
             if (activity.Type == ActivityTypes.Message)
             {
                 if (activity.AsMessageActivity().Text.Contains("/clear"))
@@ -42,7 +49,6 @@ namespace Actiance
                 else
                 {
                     await Microsoft.Bot.Builder.Dialogs.Conversation.SendAsync(activity, () => new MainDialog());
-
                 }
             }
             else
@@ -114,35 +120,10 @@ namespace Actiance
             await APIService.graphv1Client.Users[managerId].SendMail(email, true).Request().PostAsync();
         }
 
-        public static async Task MessageUserAndManager(TeamsChannelAccount user, string msg, string senderEmail, string recipientsEmails)
+        public static async Task MessageUsers(TeamsChannelAccount user, string msg, string senderEmail, string recipientsEmails)
         {
-            // Create or get existing chat conversation with user
-            var response = connector.Conversations.CreateOrGetDirectConversation(Storage.activity.Recipient, user, Storage.activity.GetTenantId());
-
-            User manager = Storage.manager;
-            if (Storage.user.Id != user.ObjectId)
-            {
-                manager = await APIService.GetUserManager(user.ObjectId);
-            }
-            msg = (string.IsNullOrEmpty(msg)) ? msg : $"\"{msg}\"";
-            var resourceString = Resources.ResourceManager.GetString("ComplianceMessage");
-            var responseMsg = string.Format(resourceString, msg, user.GivenName, manager.GivenName);
-            // Construct the message to post to conversation
-            Activity newMessage = new Activity()
-            {
-                Text = responseMsg,
-                Type = ActivityTypes.Message,
-                Conversation = new ConversationAccount
-                {
-                    Id = response.Id
-                },
-            };
+            var recipientsEmailsArray = recipientsEmails.Split(',');
             var recipients = new List<Recipient> {
-                new Recipient{
-                    EmailAddress = new EmailAddress{
-                        Address = manager.Mail
-                    }
-                },
                 new Recipient{
                     EmailAddress = new EmailAddress{
                         Address = senderEmail
@@ -150,9 +131,6 @@ namespace Actiance
                 },
 
             };
-
-
-            var recipientsEmailsArray = recipientsEmails.Split(',');
             foreach (var email in recipientsEmailsArray)
             {
                 if (!string.IsNullOrEmpty(email))
@@ -164,17 +142,49 @@ namespace Actiance
                          {
                              Address = email
                          }
-                     }
-                    );
+                     });
                 }
-
             }
 
+            foreach (var userItem in Storage.userStore.ToList())
+            {
+                string userEmail = (userItem.Value[Storage.teamsInfo] as TeamsChannelAccount).UserPrincipalName;
 
-            await EmailUsers($"{user.GivenName} {user.Surname}", msg, recipients, manager.Id);
+                if (recipientsEmailsArray.Contains(userEmail))
+                {
+                    // Create or get existing chat conversation with user
+                    TeamsChannelAccount userTeamsInfo = userItem.Value[Storage.teamsInfo] as TeamsChannelAccount;
+                    var response = connector.Conversations.CreateOrGetDirectConversation(Storage.activity.Recipient, userTeamsInfo, Storage.activity.GetTenantId());
 
-            // Post the message to chat conversation with user
-            await connector.Conversations.SendToConversationAsync(newMessage, response.Id);
+                    User manager = userItem.Value[Storage.managerInfo] as User;
+                    msg = (string.IsNullOrEmpty(msg)) ? msg : $"\"{msg}\"";
+                    var resourceString = Resources.ResourceManager.GetString("ComplianceMessage");
+                    var responseMsg = string.Format(resourceString, msg, user.GivenName, manager.GivenName);
+                    // Construct the message to post to conversation
+                    Activity newMessage = new Activity()
+                    {
+                        Text = responseMsg,
+                        Type = ActivityTypes.Message,
+                        Conversation = new ConversationAccount
+                        {
+                            Id = response.Id
+                        },
+                    };
+
+                    recipients.Add(new Recipient
+                    {
+                        EmailAddress = new EmailAddress
+                        {
+                            Address = manager.Mail
+                        }
+                    });
+
+                    await EmailUsers($"{userTeamsInfo.GivenName} {userTeamsInfo.Surname}", msg, recipients, manager.Id);
+
+                    // Post the message to chat conversation with user
+                    await connector.Conversations.SendToConversationAsync(newMessage, response.Id);
+                }
+            }
         }
     }
 }

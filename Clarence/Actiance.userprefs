@@ -1,28 +1,18 @@
 ﻿<Properties StartupConfiguration="{C1A2AE3D-8A3F-439E-908B-44954D2C37CC}|" NuGet.AddPackagesDialog.IncludePrerelease="True">
   <MonoDevelop.Ide.ItemProperties.Clarence PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="App_LocalResources/Resources.resx">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Services/MonitorService.cs">
     <Files>
-      <File FileName="Controllers/MessagesController.cs" Line="158" Column="39" />
-      <File FileName="Services/APIService.cs" Line="112" Column="1" />
-      <File FileName="Services/MonitorService.cs" Line="82" Column="58" />
-      <File FileName="Dialogs/MainDialog.cs" Line="1" Column="1" />
-      <File FileName="Dialogs/FlagIssueDialog.cs" Line="66" Column="49" />
-      <File FileName="Helpers/Storage.cs" Line="17" Column="9" />
-      <File FileName="Global.asax" Line="1" Column="1" />
-      <File FileName="Controllers/AuthController.cs" Line="1" Column="1" />
-      <File FileName="Helpers/SimpleDLP.cs" Line="56" Column="14" />
-      <File FileName="App_LocalResources/Resources.resx" Line="79" Column="19" />
+      <File FileName="Controllers/MessagesController.cs" Line="187" Column="14" />
+      <File FileName="Services/APIService.cs" Line="84" Column="40" />
+      <File FileName="Services/MonitorService.cs" Line="91" Column="59" />
+      <File FileName="Dialogs/MainDialog.cs" Line="65" Column="32" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
-      <Breakpoint enabled="false" file="/Users/claudius/Documents/workspace/Hackfests/Actiance/Clarence/Services/APIService.cs" relfile="Services/APIService.cs" line="112" column="1" />
-      <Breakpoint enabled="false" file="/Users/claudius/Documents/workspace/Hackfests/Actiance/Clarence/Services/MonitorService.cs" relfile="Services/MonitorService.cs" line="124" column="1" />
-      <Breakpoint enabled="false" file="/Users/claudius/Documents/workspace/Hackfests/Actiance/Clarence/Services/MonitorService.cs" relfile="Services/MonitorService.cs" line="25" column="1" />
-      <Breakpoint enabled="false" file="/Users/claudius/Documents/workspace/Hackfests/Actiance/Clarence/Services/MonitorService.cs" relfile="Services/MonitorService.cs" line="30" column="1" />
-      <Breakpoint enabled="false" file="/Users/claudius/Documents/workspace/Hackfests/Actiance/Clarence/Services/MonitorService.cs" relfile="Services/MonitorService.cs" line="32" column="1" />
-      <Breakpoint enabled="false" file="/Users/claudius/Documents/workspace/Hackfests/Actiance/Clarence/Services/MonitorService.cs" relfile="Services/MonitorService.cs" line="53" column="1" />
+      <Breakpoint enabled="false" file="/Users/claudius/Documents/workspace/Hackfests/Actiance/Clarence/Services/MonitorService.cs" relfile="Services/MonitorService.cs" line="125" column="31" />
+      <Breakpoint enabled="false" file="/Users/claudius/Documents/workspace/Hackfests/Actiance/Clarence/Services/MonitorService.cs" relfile="Services/MonitorService.cs" line="123" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />

@@ -70,6 +70,7 @@ namespace Actiance.Services
         {
             //User user = await GetFrom<User>($"{graphv1Endpoint}/users/{userName}@{AuthController.tenant}", await AuthController.GetOauthToken());
             User user = await graphv1Client.Users[$"{userName}@{AuthController.tenant}"].Request().GetAsync();
+            //User user = await graphv1Client.Users[userId].Request().GetAsync();
             return user;
         }
 
@@ -159,7 +160,10 @@ namespace Actiance.Services
                 }
             }
 
+            //if (Storage.deltaStore[userId] == null)
             Storage.deltaStore.Add(userId, messagesDeltaCollectionPage);
+            //else
+            //Storage.deltaStore[userId] = messagesDeltaCollectionPage;
 
             //// Now let's use the deltalink to make sure there aren't any changes. We expect to see a new message.
             //if (messagesDeltaCollectionPage.AdditionalData.TryGetValue("@odata.deltaLink", out deltaLink))
