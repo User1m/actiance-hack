@@ -10,6 +10,7 @@ using Actiance.Helpers;
 using System.Threading;
 using Actiance.Interface;
 using Microsoft.Graph;
+using System.Linq;
 
 namespace Actiance.Dialogs
 {
@@ -38,8 +39,26 @@ namespace Actiance.Dialogs
             if (Storage.context == null)
                 Storage.context = context;
 
-            string contextName = context.Activity.From.Name;
-            User user = await APIService.GetUserProfile(contextName);
+            User user = null;
+
+            string contextName = context.Activity.From.Name.ToLower();
+            if (!Storage.contextUserNameToIdStore.ContainsKey(contextName))
+            {
+                string contextNameId = contextName;
+                var contextNameArray = contextName.Split(' ');
+                if (contextNameArray.Count() >= 2)
+                {
+                    contextNameId = contextNameArray[0] + contextNameArray[1][0];
+                }
+
+                user = await APIService.GetUserProfile(contextNameId);
+                Storage.contextUserNameToIdStore.Add(contextName, user.Id);
+            }
+            else
+            {
+                string Id = Storage.contextUserNameToIdStore[contextName];
+                user = Storage.userStore[Id][Storage.selfInfo] as User;
+            }
 
             if (!Storage.userStore[user.Id].ContainsKey(Storage.selfInfo))
             {
@@ -63,6 +82,7 @@ namespace Actiance.Dialogs
                 });
                 thread.Start();
             }
+
 
             var message = await result;
 

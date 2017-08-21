@@ -29,8 +29,7 @@ namespace Actiance
         /// </summary>
         public async Task<IHttpActionResult> Post([FromBody]Activity activity)
         {
-            if (Storage.activity == null)
-                Storage.activity = activity;
+            Storage.activity = activity;
 
             connector = new ConnectorClient(new Uri(activity.ServiceUrl));
 

@@ -13,6 +13,7 @@ namespace Actiance.Helpers
         public static string managerInfo = "managerInfo";
         public static string teamsInfo = "teamsInfo";
 
+        public static Dictionary<string, string> contextUserNameToIdStore { get; set; } = new Dictionary<string, string>();
         public static Dictionary<string, Dictionary<string, object>> userStore { get; set; } = new Dictionary<string, Dictionary<string, object>>();
         public static Activity activity { get; set; } = null;
         public static IDialogContext context { get; set; } = null;
