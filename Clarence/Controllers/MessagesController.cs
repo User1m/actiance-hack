@@ -22,7 +22,6 @@ namespace Actiance
     {
 
         private static ConnectorClient connector;
-        //private Timer timer;
 
         /// <summary>
         /// POST: api/Messages
@@ -30,7 +29,9 @@ namespace Actiance
         /// </summary>
         public async Task<IHttpActionResult> Post([FromBody]Activity activity)
         {
-            Storage.activity = activity;
+            if (Storage.activity == null)
+                Storage.activity = activity;
+
             connector = new ConnectorClient(new Uri(activity.ServiceUrl));
 
             var members = await GetConverationMembers();
