@@ -34,10 +34,20 @@ namespace Actiance
             connector = new ConnectorClient(new Uri(activity.ServiceUrl));
 
             var members = await GetConverationMembers();
-            foreach (var member in members)
+            try
             {
-                Storage.userStore.Add(member.ObjectId, new Dictionary<string, object> { { Storage.teamsInfo, member } });
+                foreach (var member in members)
+                {
+                    if (!Storage.userStore.ContainsKey(member.ObjectId))
+                        Storage.userStore.Add(member.ObjectId, new Dictionary<string, object> { { Storage.teamsInfo, member } });
+                }
             }
+            catch (Exception e)
+            {
+                Console.WriteLine($"ERROR IN USERSTORE: {e.Message}");
+                Console.WriteLine($"ERROR IN USERSTORE: {e.StackTrace}");
+            }
+
 
             if (activity.Type == ActivityTypes.Message)
             {
@@ -120,9 +130,9 @@ namespace Actiance
             await APIService.graphv1Client.Users[managerId].SendMail(email, true).Request().PostAsync();
         }
 
-        public static async Task MessageUsers(TeamsChannelAccount user, string msg, string senderEmail, string recipientsEmails)
+        public static async Task MessageUsers(string msg, string senderEmail, string recipientsEmails)
         {
-            var recipientsEmailsArray = recipientsEmails.Split(',');
+            var recipientsEmailsArray = recipientsEmails.Split(',').Where(x => !string.IsNullOrEmpty(x));
             var recipients = new List<Recipient> {
                 new Recipient{
                     EmailAddress = new EmailAddress{
@@ -133,17 +143,14 @@ namespace Actiance
             };
             foreach (var email in recipientsEmailsArray)
             {
-                if (!string.IsNullOrEmpty(email))
-                {
-                    recipients.Add(
-                     new Recipient
+                recipients.Add(
+                 new Recipient
+                 {
+                     EmailAddress = new EmailAddress
                      {
-                         EmailAddress = new EmailAddress
-                         {
-                             Address = email
-                         }
-                     });
-                }
+                         Address = email
+                     }
+                 });
             }
 
             foreach (var userItem in Storage.userStore.ToList())
@@ -159,7 +166,7 @@ namespace Actiance
                     User manager = userItem.Value[Storage.managerInfo] as User;
                     msg = (string.IsNullOrEmpty(msg)) ? msg : $"\"{msg}\"";
                     var resourceString = Resources.ResourceManager.GetString("ComplianceMessage");
-                    var responseMsg = string.Format(resourceString, msg, user.GivenName, manager.GivenName);
+                    var responseMsg = string.Format(resourceString, msg, userTeamsInfo.GivenName, manager.GivenName);
                     // Construct the message to post to conversation
                     Activity newMessage = new Activity()
                     {

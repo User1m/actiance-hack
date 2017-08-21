@@ -40,7 +40,6 @@ namespace Actiance.Dialogs
 
             string contextName = context.Activity.From.Name;
             User user = await APIService.GetUserProfile(contextName);
-            Storage.userContextNameToIdStore.Add(contextName, user.Id);
 
             if (!Storage.userStore[user.Id].ContainsKey(Storage.selfInfo))
             {

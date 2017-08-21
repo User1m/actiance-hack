@@ -37,7 +37,8 @@ namespace Actiance.Services
                             {
                                 recipientsEmails += $"{rep.EmailAddress.Address},";
                             }
-                            tasks.Add(SendComplianceMsgAsync(Storage.userStore[userId][Storage.teamsInfo] as TeamsChannelAccount, entry.BodyPreview, entry.Sender.EmailAddress.Address, recipientsEmails));
+                            recipientsEmails += entry.Sender.EmailAddress.Address;
+                            tasks.Add(SendComplianceMsgAsync(entry.BodyPreview, entry.Sender.EmailAddress.Address, recipientsEmails));
                             break;
                         }
                     }
@@ -50,13 +51,17 @@ namespace Actiance.Services
             return true;
         }
 
-        public static async Task SendComplianceMsgAsync(TeamsChannelAccount user, string msg, string senderEmail, string recipientsEmails)
+        public static async Task SendComplianceMsgAsync(string msg, string senderEmail, string recipientsEmails)
         {
-            await MessagesController.MessageUsers(user, msg, senderEmail, recipientsEmails);
+            await MessagesController.MessageUsers(msg, senderEmail, recipientsEmails);
         }
 
         public static async Task Monitor(string objectId)
         {
+            System.Timers.Timer t = new System.Timers.Timer();
+            t.AutoReset = false;
+            t.Interval = 10 * 1000;
+
             try
             {
                 Console.WriteLine($"-------------\nSTARTED INGESTING USER: {objectId} MESSAGES\n-------------");
@@ -75,34 +80,24 @@ namespace Actiance.Services
 
                 Console.WriteLine($"-------------\nDONE INGESTING USER: {objectId} MESSAGES\n-------------");
 
-
-                // Thread thread = new Thread(() =>
-                //{
-                //    System.Timers.Timer t = new System.Timers.Timer();
-                //    t.AutoReset = false;
-                //    t.Interval = 10 * 1000;
-
-                //    Thread.CurrentThread.IsBackground = true;
-                //    Console.WriteLine($"-------------\nSTARTED TIMER FOR USER: {objectId}\n-------------");
-                //    t.Elapsed += async delegate
-                //    {
-                //        try
-                //        {
-                //            await PollForUserMessages();
-                //        }
-                //        catch (Exception e)
-                //        {
-                //            Console.WriteLine($"ERROR IN TIMER THREAD: {e.Message}");
-                //            Console.WriteLine($"ERROR IN TIMER THREAD: {e.StackTrace}");
-                //        }
-                //        finally
-                //        {
-                //            t.Start();
-                //        }
-                //    };
-                //    t.Start();
-                //});
-                //thread.Start();
+                t.Elapsed += async delegate
+                    {
+                        try
+                        {
+                            Console.WriteLine($"-------------\nSTARTED TIMER FOR USER: {objectId}\n-------------");
+                            await PollForUserMessages();
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine($"ERROR IN TIMER THREAD: {e.Message}");
+                            Console.WriteLine($"ERROR IN TIMER THREAD: {e.StackTrace}");
+                        }
+                        finally
+                        {
+                            t.Start();
+                        }
+                    };
+                t.Start();
             }
             catch (Exception e)
             {
