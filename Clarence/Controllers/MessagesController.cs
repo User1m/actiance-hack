@@ -30,42 +30,46 @@ namespace Actiance
         public async Task<IHttpActionResult> Post([FromBody]Activity activity)
         {
             Storage.activity = activity;
-
             connector = new ConnectorClient(new Uri(activity.ServiceUrl));
 
-            var members = await GetConverationMembers();
-            try
+            if (!activity.ChannelId.Equals("msteams"))
             {
-                foreach (var member in members)
-                {
-                    if (!Storage.userStore.ContainsKey(member.ObjectId))
-                        Storage.userStore.Add(member.ObjectId, new Dictionary<string, object> { { Storage.teamsInfo, member } });
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"ERROR IN USERSTORE: {e.Message}");
-                Console.WriteLine($"ERROR IN USERSTORE: {e.StackTrace}");
-            }
-
-
-            if (activity.Type == ActivityTypes.Message)
-            {
-                if (activity.AsMessageActivity().Text.Contains("/clear"))
-                {
-                    await _reset();
-                }
-
-                else
-                {
-                    await Microsoft.Bot.Builder.Dialogs.Conversation.SendAsync(activity, () => new MainDialog());
-                }
+                await checkChannel();
             }
             else
             {
-                HandleSystemMessage(activity);
-            }
+                var members = await GetConverationMembers();
+                try
+                {
+                    foreach (var member in members)
+                    {
+                        if (!Storage.userStore.ContainsKey(member.ObjectId))
+                            Storage.userStore.Add(member.ObjectId, new Dictionary<string, object> { { Storage.teamsInfo, member } });
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"ERROR IN USERSTORE: {e.Message}");
+                    Console.WriteLine($"ERROR IN USERSTORE: {e.StackTrace}");
+                }
 
+                if (activity.Type == ActivityTypes.Message)
+                {
+                    if (activity.AsMessageActivity().Text.Contains("/clear"))
+                    {
+                        await _reset();
+                    }
+
+                    else
+                    {
+                        await Microsoft.Bot.Builder.Dialogs.Conversation.SendAsync(activity, () => new MainDialog());
+                    }
+                }
+                else
+                {
+                    HandleSystemMessage(activity);
+                }
+            }
             return Ok();
         }
 
@@ -81,6 +85,14 @@ namespace Actiance
             }
 
             return null;
+        }
+
+        private async Task checkChannel()
+        {
+            Activity activity = Storage.activity;
+            var clearMsg = activity.CreateReply();
+            clearMsg.Text = $"Sorry this Bot is intended to be used in Microsoft Teams.";
+            await connector.Conversations.SendToConversationAsync(clearMsg);
         }
 
         private async Task _reset()
